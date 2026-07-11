@@ -55,7 +55,7 @@ function displayNameFor(accountId) {
     return formatOwnerDisplayName(owner.username);
   }
 
-  const session = sessions.get(id);
+  const session = sessionsMap().get(id);
   if (session?.displayName) {
     const base = stripOwnerTag(session.displayName);
     if (isOwnerAccount(id, base)) return formatOwnerDisplayName(base);
