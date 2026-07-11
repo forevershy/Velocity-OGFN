@@ -10,6 +10,15 @@
 
 Share the same **Velocity installer** with friends. They still need their **own legally-owned Fortnite build** and a way to redirect game traffic to your server IP (SSL bypass / redirect — same as any OGFN setup).
 
+## Friends & joining lobbies
+
+1. **Everyone joins the same backend** — friends use **Settings → Join friend's server** with your IP.
+2. **Add each other in-game** — Social tab → search username → Add Friend (requests auto-accept on this server).
+3. **Invite to party** — from the friends list, invite them; they get a party popup via XMPP.
+4. **Join lobby** — when a friend is in an open party, use **Join** on their profile (party is joinable in the lobby).
+
+Both players must be **online on the same backend** and using the **same Fortnite build** for party/lobby join to work.
+
 ## For your friends (join)
 
 1. Install Velocity from the file you sent them.

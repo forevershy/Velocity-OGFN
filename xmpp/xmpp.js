@@ -72,6 +72,10 @@ function send(client, xml) {
   if (client.ws.readyState === WebSocket.OPEN) client.ws.send(xml);
 }
 
+function sendRaw(client, xml) {
+  send(client, xml);
+}
+
 function handleStanza(client, raw) {
   const stanza = parseStanza(raw);
   if (!stanza) return;
@@ -173,6 +177,15 @@ function onIq(client, stanza) {
     const session = sessions.get(client.accountId);
     client.displayName = session?.displayName || client.accountId;
     setOnline(client.accountId, client.displayName);
+
+    try {
+      const { getUserParty } = require("../structs/partyService");
+      const { pushPresenceToFriends } = require("../structs/socialNotify");
+      const party = getUserParty(client.accountId);
+      if (party) pushPresenceToFriends(client.accountId, party);
+    } catch {
+      /* party module optional at boot */
+    }
 
     return send(
       client,
@@ -469,9 +482,15 @@ function isJSON(str) {
 }
 
 function broadcastPresence(client) {
-  // Simplified: send this client's presence to all other connected clients.
-  for (const [, other] of clients) {
-    if (other === client || !client.presence) continue;
+  const { listFriends } = require("../structs/friendGraph");
+  const friends = listFriends(client.accountId);
+  const targets =
+    friends.length > 0
+      ? friends.map((id) => findByAccountId(id)).filter(Boolean)
+      : [...clients.values()].filter((other) => other !== client);
+
+  for (const other of targets) {
+    if (!client.presence) continue;
     const stanza = client.presence.replace(
       "<presence",
       `<presence from="${client.jid}" to="${other.jid}"`
@@ -538,4 +557,4 @@ function kickClient(accountId, reason) {
   return true;
 }
 
-module.exports = { start, clients, sendXmppMessageToId, kickClient };
+module.exports = { start, clients, sendXmppMessageToId, kickClient, findByAccountId, sendRaw };

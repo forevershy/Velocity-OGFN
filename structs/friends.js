@@ -1,63 +1,65 @@
-// Shared friends list — every known account is auto-friended so party invites work.
-const { sessions } = require("../routes/auth");
-const { listAccounts } = require("./profiles");
-const { clients } = require("../xmpp/xmpp");
+// Friend list helpers — backed by persisted friend graph + live sessions.
+const { listFriends, listIncoming, listOutgoing, accountIdsForDiscovery } = require("./friendGraph");
+const { displayNameFor, isAccountOnline } = require("../utils/accounts");
 
-function displayNameFor(accountId) {
-  const session = sessions.get(accountId);
-  if (session?.displayName) return session.displayName;
-  for (const [, c] of clients) {
-    if (c.accountId === accountId && c.displayName) return c.displayName;
-  }
-  return `Player_${String(accountId).slice(0, 6)}`;
-}
-
-function collectAccountIds() {
-  const ids = new Set();
-  for (const row of listAccounts()) {
-    if (row?.accountId) ids.add(row.accountId);
-  }
-  for (const accountId of sessions.keys()) ids.add(accountId);
-  for (const [, c] of clients) {
-    if (c.accountId) ids.add(c.accountId);
-  }
-  return [...ids];
+function resolveFriendIds(forAccountId) {
+  const explicit = listFriends(forAccountId);
+  if (explicit.length) return explicit;
+  // Before anyone adds friends, show other known accounts so search/party still works.
+  return accountIdsForDiscovery().filter((id) => id !== forAccountId);
 }
 
 function friendSummary(forAccountId) {
-  return collectAccountIds()
-    .filter((id) => id !== forAccountId)
-    .map((accountId) => ({
-      accountId,
-      groups: [],
-      alias: "",
-      note: "",
-      favorite: false,
-      created: new Date().toISOString(),
-    }));
+  return resolveFriendIds(forAccountId).map((accountId) => ({
+    accountId,
+    groups: [],
+    alias: "",
+    note: "",
+    favorite: false,
+    created: new Date().toISOString(),
+  }));
 }
 
 function friendPublic(forAccountId) {
-  return collectAccountIds()
-    .filter((id) => id !== forAccountId)
-    .map((accountId) => ({
-      accountId,
-      status: clients.has(`${accountId}@prod.ol.epicgames.com`) ? "ONLINE" : "OFFLINE",
-      created: new Date().toISOString(),
-    }));
+  return resolveFriendIds(forAccountId).map((accountId) => ({
+    accountId,
+    status: isAccountOnline(accountId) ? "ONLINE" : "OFFLINE",
+    created: new Date().toISOString(),
+  }));
 }
 
 function friendV1(forAccountId) {
-  return collectAccountIds()
-    .filter((id) => id !== forAccountId)
-    .map((accountId) => ({
-      accountId,
-      groups: [],
-      alias: "",
-      note: "",
-      favorite: false,
-      created: new Date().toISOString(),
-    }));
+  return friendSummary(forAccountId);
 }
 
-module.exports = { collectAccountIds, displayNameFor, friendSummary, friendPublic, friendV1 };
+function incomingRequests(forAccountId) {
+  return listIncoming(forAccountId).map((accountId) => ({
+    accountId,
+    groups: [],
+    alias: "",
+    note: "",
+    favorite: false,
+    created: new Date().toISOString(),
+  }));
+}
+
+function outgoingRequests(forAccountId) {
+  return listOutgoing(forAccountId).map((accountId) => ({
+    accountId,
+    groups: [],
+    alias: "",
+    note: "",
+    favorite: false,
+    created: new Date().toISOString(),
+  }));
+}
+
+module.exports = {
+  displayNameFor,
+  friendSummary,
+  friendPublic,
+  friendV1,
+  incomingRequests,
+  outgoingRequests,
+  resolveFriendIds,
+};

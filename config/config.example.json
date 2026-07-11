@@ -13,6 +13,7 @@
     "xmppPort": 80
   },
   "bAllowAnyAccountId": true,
+  "bAutoAcceptFriends": true,
   "bEnableMatchmaking": true,
   "matchmaker": {
     "ip": "127.0.0.1",
