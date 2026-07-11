@@ -6,7 +6,8 @@ const app = express.Router();
 
 const { accountIdFromName, makeToken, nowIso } = require("../utils/functions");
 const { ensureAccountProfiles, applyOwnerPerks } = require("../structs/profiles");
-const { stripOwnerTag, formatOwnerDisplayName } = require("../structs/owner");
+const { stripOwnerTag } = require("../structs/owner");
+const { ensureSessionDisplayName } = require("../utils/accounts");
 const { isBanned, getBanInfo } = require("../structs/bans");
 
 const sessions = new Map();
@@ -102,8 +103,7 @@ function issueTokens(rawDisplayName, res) {
   const ban = getBanInfo(accountId);
   if (ban) return bannedResponse(res, ban);
 
-  const displayName = formatOwnerDisplayName(username);
-  sessions.set(accountId, { displayName, username });
+  const displayName = ensureSessionDisplayName(accountId, username);
   ensureAccountProfiles(accountId);
   applyOwnerPerks(accountId);
 
@@ -111,8 +111,8 @@ function issueTokens(rawDisplayName, res) {
   const refreshToken = makeToken("eg1");
   const expires = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString();
 
-  tokenSessions.set(accessToken, { accountId, displayName });
-  tokenSessions.set(refreshToken, { accountId, displayName });
+  tokenSessions.set(accessToken, { accountId, displayName, username });
+  tokenSessions.set(refreshToken, { accountId, displayName, username });
 
   res.json({
     access_token: accessToken,
@@ -191,7 +191,7 @@ app.get("/account/api/oauth/verify", (req, res) => {
   const token = auth.replace(/^bearer\s+/i, "").trim();
   const session = tokenSessions.get(token);
   const accountId = session?.accountId || "ogfn";
-  const displayName = session?.displayName || "OGFNPlayer";
+  const displayName = ensureSessionDisplayName(accountId, session?.username || session?.displayName);
 
   res.json({
     token: token || makeToken("eg1"),
@@ -238,7 +238,7 @@ app.get("/account/api/oauth/exchange", (req, res) => {
 app.get("/account/api/public/account/:accountId", (req, res) => {
   const accountId = req.params.accountId;
   const session = sessions.get(accountId);
-  const displayName = session ? session.displayName : `Player_${accountId.slice(0, 6)}`;
+  const displayName = ensureSessionDisplayName(accountId, session?.username || session?.displayName);
 
   res.json({
     id: accountId,
@@ -268,8 +268,7 @@ app.get("/account/api/public/account", (req, res) => {
 
   res.json(
     ids.map((accountId) => {
-      const session = sessions.get(accountId);
-      const displayName = session ? session.displayName : `Player_${String(accountId).slice(0, 6)}`;
+      const displayName = ensureSessionDisplayName(accountId);
       return { id: accountId, displayName, externalAuths: {} };
     })
   );
@@ -295,8 +294,7 @@ app.get("/account/api/public/account/:accountId/restrictions", (req, res) => {
 app.get("/account/api/public/account/displayName/:displayName", (req, res) => {
   const username = stripOwnerTag(req.params.displayName);
   const accountId = accountIdFromName(username);
-  const displayName = formatOwnerDisplayName(username);
-  sessions.set(accountId, { displayName, username });
+  const displayName = ensureSessionDisplayName(accountId, username);
   ensureAccountProfiles(accountId);
   applyOwnerPerks(accountId);
   res.json({ id: accountId, displayName, externalAuths: {} });

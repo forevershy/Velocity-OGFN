@@ -6,7 +6,7 @@ const config = require("../config/config.json");
 const log = require("../utils/logger");
 const { parseStanza } = require("./parser");
 const { setOnline, clearPresence } = require("../structs/playerPresence");
-const { sessions } = require("../routes/auth");
+const { ensureSessionDisplayName } = require("../utils/accounts");
 
 const DOMAIN = "prod.ol.epicgames.com";
 const MUC_DOMAIN = "muc.prod.ol.epicgames.com";
@@ -174,8 +174,7 @@ function onIq(client, stanza) {
     client.resource = resMatch ? resMatch[1] : uuid();
     client.jid = `${client.accountId}@${DOMAIN}/${client.resource}`;
     clients.set(bareJid(client), client);
-    const session = sessions.get(client.accountId);
-    client.displayName = session?.displayName || client.accountId;
+    client.displayName = ensureSessionDisplayName(client.accountId);
     setOnline(client.accountId, client.displayName);
 
     try {

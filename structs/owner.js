@@ -24,13 +24,10 @@ function getOwnerConfig() {
 function isOwnerAccount(accountId, username) {
   const owner = getOwnerConfig();
   const id = String(accountId || "").toLowerCase();
-  const base = stripOwnerTag(username || "").toLowerCase();
-
   if (owner.accountId && id === String(owner.accountId).toLowerCase()) return true;
-  if (owner.username && base === String(owner.username).toLowerCase()) return true;
-  if (base && id === accountIdFromName(base).toLowerCase() && owner.username && base === owner.username.toLowerCase()) {
-    return true;
-  }
+
+  const base = stripOwnerTag(username || "").toLowerCase();
+  if (owner.username && base && base === String(owner.username).toLowerCase()) return true;
   return false;
 }
 
@@ -53,6 +50,7 @@ function getOwnerBanner() {
 module.exports = {
   stripOwnerTag,
   getOwnerTag,
+  getOwnerConfig,
   isOwnerAccount,
   formatOwnerDisplayName,
   getOwnerBanner,
