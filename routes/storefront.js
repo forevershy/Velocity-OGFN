@@ -2,15 +2,16 @@
 const app = express.Router();
 
 const { nowIso } = require("../utils/functions");
-const { buildCatalog, ensureCatalogReady } = require("../structs/itemShop");
+const { buildCatalog, ensureCatalogReady, rotationWindow, ROTATION_HOURS } = require("../structs/itemShop");
 const { enrichCatalog } = require("../structs/battlePass");
 const { getVersionInfo } = require("../utils/functions");
 
 function emptyCatalog() {
+  const { expires } = rotationWindow();
   return {
-    refreshIntervalHrs: 24,
-    dailyPurchaseHrs: 24,
-    expiration: "2099-12-31T23:59:59.999Z",
+    refreshIntervalHrs: ROTATION_HOURS,
+    dailyPurchaseHrs: ROTATION_HOURS,
+    expiration: expires,
     storefronts: [
       { name: "BRDailyStorefront", catalogEntries: [] },
       { name: "BRWeeklyStorefront", catalogEntries: [] },

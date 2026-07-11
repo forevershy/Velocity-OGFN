@@ -13,10 +13,24 @@ const LEGACY_POOL_PATH = path.join(__dirname, "..", "data", "shop-c1-legacy.json
 const CACHE_PATH =
   process.env.VELOCITY_SHOP_CACHE || path.join(__dirname, "..", "data", "shop-cache.json");
 
+/** Shop rotates every N hours (UTC). */
+const ROTATION_HOURS = 6;
+
 /** @type {Array<{name:string,type:string,templateId:string,rarity:string,chapter:number,season:number}>} */
 let cosmeticPool = [];
 let cachedCatalog = null;
-let cacheDay = null;
+let cacheKey = null;
+let rotationNonce = 0;
+
+function rotationWindow() {
+  const d = new Date();
+  const block = Math.floor(d.getUTCHours() / ROTATION_HOURS);
+  const key = `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}-b${block}-n${rotationNonce}`;
+  const expires = new Date(
+    Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), (block + 1) * ROTATION_HOURS, 0, 0, 0)
+  );
+  return { key, expires: expires.toISOString() };
+}
 
 function loadLegacyPoolFromDisk() {
   if (!fs.existsSync(LEGACY_POOL_PATH)) return [];
@@ -90,11 +104,6 @@ async function ensurePool() {
   return cosmeticPool;
 }
 
-function dailySeed() {
-  const d = new Date();
-  return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
-}
-
 function seededRandom(seed) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (Math.imul(31, h) + seed.charCodeAt(i)) >>> 0;
@@ -113,6 +122,44 @@ function pickRandom(pool, count, seed) {
     out.push(arr.splice(i, 1)[0]);
   }
   return out;
+}
+
+function pickRandomExcluding(pool, count, seed, exclude = []) {
+  const blocked = new Set(exclude.map((i) => i.templateId));
+  return pickRandom(
+    pool.filter((i) => !blocked.has(i.templateId)),
+    count,
+    seed
+  );
+}
+
+function dedupePool(items) {
+  const seen = new Set();
+  const out = [];
+  for (const item of items) {
+    if (!item?.templateId || seen.has(item.templateId)) continue;
+    seen.add(item.templateId);
+    out.push(item);
+  }
+  return out;
+}
+
+function buildSeasonPool(season) {
+  const disk = cosmeticPool.length ? cosmeticPool : loadPoolFromDisk();
+  const legacy = loadLegacyPoolFromDisk();
+  const merged = dedupePool([...legacy, ...disk]);
+  return filterPoolForSeason(merged, season);
+}
+
+function findPoolItem(templateId) {
+  if (!templateId) return null;
+  const want = templateId.toLowerCase();
+  const pools = [cosmeticPool, loadPoolFromDisk(), loadLegacyPoolFromDisk()];
+  for (const pool of pools) {
+    const hit = pool.find((i) => i.templateId?.toLowerCase() === want);
+    if (hit) return hit;
+  }
+  return null;
 }
 
 function priceForItem(item) {
@@ -148,8 +195,9 @@ function filterPoolForSeason(pool, season) {
   if (!season || season >= 11) return pool;
   return pool.filter((item) => {
     if (!item.chapter || !item.season) return false;
-    if (item.chapter !== 1) return false;
-    return item.season <= season;
+    if (item.chapter === 1) return item.season <= season;
+    if (item.chapter === 2 && season >= 11) return item.season <= season - 10;
+    return false;
   });
 }
 
@@ -294,14 +342,14 @@ function buildCatalogEntry(item, section, tileSize, options = {}) {
 }
 
 async function buildCatalog(season = 0) {
-  const day = dailySeed();
-  const cacheKey = `${day}:${season || "modern"}`;
-  if (cachedCatalog && cacheDay === cacheKey) return cachedCatalog;
+  const { key, expires } = rotationWindow();
+  const cacheId = `${key}:${season || "modern"}`;
+  if (cachedCatalog && cacheKey === cacheId) return cachedCatalog;
   if (!cosmeticPool.length) await ensurePool();
-  cachedCatalog = buildCatalogFromPool(day, season);
-  cacheDay = cacheKey;
+  cachedCatalog = buildCatalogFromPool(key, expires, season);
+  cacheKey = cacheId;
   try {
-    fs.writeFileSync(CACHE_PATH, JSON.stringify({ day: cacheKey, catalog: cachedCatalog }, null, 2));
+    fs.writeFileSync(CACHE_PATH, JSON.stringify({ day: cacheId, catalog: cachedCatalog }, null, 2));
   } catch {
     /* ignore */
   }
@@ -309,49 +357,57 @@ async function buildCatalog(season = 0) {
   const featured = cachedCatalog.storefronts.find((s) => s.name === "BRWeeklyStorefront");
   const daily = cachedCatalog.storefronts.find((s) => s.name === "BRDailyStorefront");
   log.backend(
-    `Item shop rotated (S${season || "?"}) â€” season:${seasonStore?.catalogEntries.length || 0} featured:${featured?.catalogEntries.length || 0} daily:${daily?.catalogEntries.length || 0}`
+    `Item shop rotated (S${season || "?"}) — season:${seasonStore?.catalogEntries.length || 0} featured:${featured?.catalogEntries.length || 0} daily:${daily?.catalogEntries.length || 0} · next refresh ${expires}`
   );
   return cachedCatalog;
 }
 
-function buildCatalogFromPool(day, season = 0) {
-  const basePool = cosmeticPool.length ? cosmeticPool : loadPoolFromDisk();
-  const legacyPool = loadLegacyPoolFromDisk();
-  const sourcePool =
-    usesLegacyStorefront(season) && legacyPool.length
-      ? legacyPool
-      : basePool;
-  const pool = filterPoolForSeason(sourcePool, season);
+function buildCatalogFromPool(rotationKey, expiration, season = 0) {
+  const pool = buildSeasonPool(season);
   cosmeticPool = cosmeticPool.length ? cosmeticPool : loadPoolFromDisk();
-  if (!pool.length) {
-    return {
-      refreshIntervalHrs: 24,
-      dailyPurchaseHrs: 24,
-      expiration: "2099-12-31T23:59:59.999Z",
-      storefronts: [
-        { name: "BRDailyStorefront", catalogEntries: [] },
-        { name: "BRWeeklyStorefront", catalogEntries: [] },
-        { name: "BRSeasonStorefront", catalogEntries: [] },
-      ],
-    };
-  }
+
+  const shell = {
+    refreshIntervalHrs: ROTATION_HOURS,
+    dailyPurchaseHrs: ROTATION_HOURS,
+    expiration,
+    storefronts: [
+      { name: "BRDailyStorefront", catalogEntries: [] },
+      { name: "BRWeeklyStorefront", catalogEntries: [] },
+      { name: "BRSeasonStorefront", catalogEntries: [] },
+    ],
+  };
+
+  if (!pool.length) return shell;
 
   if (usesLegacyStorefront(season)) {
-    const preferred = pool.filter((i) => ["outfit", "pickaxe", "emote", "glider"].includes(i.type));
-    const pinned = pool.filter((i) => i.displayAssetPath).slice(0, 6);
-    const fillerPool = preferred.filter((i) => !pinned.some((p) => p.templateId === i.templateId));
-    const filler = pickRandom(
-      fillerPool,
-      Math.max(0, 6 - pinned.length),
-      `${day}:season:${season}`
+    const preferred = pool.filter((i) => ["outfit", "pickaxe", "emote", "glider", "backpack"].includes(i.type));
+    const source = preferred.length >= 12 ? preferred : pool;
+
+    const featuredItems = pickRandom(source.filter((i) => i.type === "outfit"), 6, `${rotationKey}:featured:${season}`);
+    const featuredFill = pickRandomExcluding(
+      source,
+      Math.max(0, 6 - featuredItems.length),
+      `${rotationKey}:featured:fill:${season}`,
+      featuredItems
     );
-    const items = [...pinned, ...filler].slice(0, 6);
-    const weeklyItems = items.slice(0, 6);
-    const dailyItems = items.slice(0, 4);
+    const weeklyItems = [...featuredItems, ...featuredFill].slice(0, 6);
+
+    const dailyItems = pickRandomExcluding(
+      source.filter((i) => ["pickaxe", "glider", "emote", "backpack"].includes(i.type)),
+      6,
+      `${rotationKey}:daily:${season}`,
+      weeklyItems
+    );
+    const dailyFill = pickRandomExcluding(source, Math.max(0, 6 - dailyItems.length), `${rotationKey}:daily:fill:${season}`, [
+      ...weeklyItems,
+      ...dailyItems,
+    ]);
+    const dailyFinal = [...dailyItems, ...dailyFill].slice(0, 6);
+
+    const seasonItems = pickRandomExcluding(source, 6, `${rotationKey}:season:${season}`, [...weeklyItems, ...dailyFinal]);
+
     return {
-      refreshIntervalHrs: 24,
-      dailyPurchaseHrs: 24,
-      expiration: "2099-12-31T23:59:59.999Z",
+      ...shell,
       storefronts: [
         {
           name: "BRWeeklyStorefront",
@@ -361,13 +417,13 @@ function buildCatalogFromPool(day, season = 0) {
         },
         {
           name: "BRDailyStorefront",
-          catalogEntries: dailyItems.map((item) =>
+          catalogEntries: dailyFinal.map((item) =>
             buildCatalogEntry(item, "Daily", "Small", { legacy: true, layout: "daily" })
           ),
         },
         {
           name: "BRSeasonStorefront",
-          catalogEntries: items.map((item, i) =>
+          catalogEntries: seasonItems.map((item, i) =>
             buildCatalogEntry(item, `Panel ${i + 1}`, "Normal", { legacy: true, layout: "season" })
           ),
         },
@@ -375,17 +431,19 @@ function buildCatalogFromPool(day, season = 0) {
     };
   }
 
-  const featured = pickRandom(pool, 6, `${day}:featured`);
-  const daily = pickRandom(
-    pool.filter((i) => !featured.some((f) => f.templateId === i.templateId)),
+  const outfits = pool.filter((i) => i.type === "outfit");
+  const other = pool.filter((i) => i.type !== "outfit");
+
+  const featured = pickRandom(outfits.length >= 6 ? outfits : pool, 6, `${rotationKey}:featured:${season || "all"}`);
+  const daily = pickRandomExcluding(
+    other.length >= 8 ? other : pool,
     8,
-    `${day}:daily`
+    `${rotationKey}:daily:${season || "all"}`,
+    featured
   );
 
   return {
-    refreshIntervalHrs: 24,
-    dailyPurchaseHrs: 24,
-    expiration: "2099-12-31T23:59:59.999Z",
+    ...shell,
     storefronts: [
       {
         name: "BRWeeklyStorefront",
@@ -399,17 +457,28 @@ function buildCatalogFromPool(day, season = 0) {
   };
 }
 
+function forceRotateShop() {
+  rotationNonce += 1;
+  cachedCatalog = null;
+  cacheKey = null;
+  try {
+    if (fs.existsSync(CACHE_PATH)) fs.unlinkSync(CACHE_PATH);
+  } catch {
+    /* ignore */
+  }
+}
+
 function ensureCatalogReady(season = 0) {
-  const day = dailySeed();
-  const cacheKey = `${day}:${season || "modern"}`;
-  if (cachedCatalog && cacheDay === cacheKey) return cachedCatalog;
+  const { key, expires } = rotationWindow();
+  const cacheId = `${key}:${season || "modern"}`;
+  if (cachedCatalog && cacheKey === cacheId) return cachedCatalog;
 
   if (fs.existsSync(CACHE_PATH)) {
     try {
       const cached = JSON.parse(fs.readFileSync(CACHE_PATH, "utf8"));
-      if (cached.day === cacheKey && cached.catalog) {
+      if (cached.day === cacheId && cached.catalog) {
         cachedCatalog = cached.catalog;
-        cacheDay = cacheKey;
+        cacheKey = cacheId;
         return cachedCatalog;
       }
     } catch {
@@ -418,13 +487,13 @@ function ensureCatalogReady(season = 0) {
   }
 
   if (!cosmeticPool.length) cosmeticPool = loadPoolFromDisk();
-  cachedCatalog = buildCatalogFromPool(day, season);
-  cacheDay = cacheKey;
+  cachedCatalog = buildCatalogFromPool(key, expires, season);
+  cacheKey = cacheId;
   return cachedCatalog;
 }
 
 function findOffer(offerId) {
-  for (const season of [10, 9, 8, 7, 6, 5, 4, 3, 2, 0]) {
+  for (const season of [14, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0]) {
     ensureCatalogReady(season);
     if (!cachedCatalog) continue;
     for (const sf of cachedCatalog.storefronts) {
@@ -432,6 +501,20 @@ function findOffer(offerId) {
       if (entry) return entry;
     }
   }
+
+  if (offerId.startsWith("velocity:")) {
+    const templateId = offerId.slice("velocity:".length);
+    const item = findPoolItem(templateId);
+    if (item) return buildCatalogEntry(item, "Featured", "Normal");
+  }
+
+  for (const item of dedupePool([...loadLegacyPoolFromDisk(), ...loadPoolFromDisk()])) {
+    const id = item.offerId || offerIdFor(item.templateId);
+    if (id === offerId) {
+      return buildCatalogEntry(item, "Featured", "Normal", { legacy: true, layout: "weekly" });
+    }
+  }
+
   return null;
 }
 
@@ -548,4 +631,7 @@ module.exports = {
   purchase,
   ensurePool,
   ensureCatalogReady,
+  forceRotateShop,
+  rotationWindow,
+  ROTATION_HOURS,
 };

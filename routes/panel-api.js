@@ -557,23 +557,44 @@ app.post("/ogfn-panel/api/add", requirePanelAuth, (req, res) => {
 
 app.get("/ogfn-panel/api/shop", async (req, res) => {
   try {
-    const catalog = await buildCatalog(parseInt(req.query.season, 10) || 4);
+    const season = parseInt(req.query.season, 10) || 4;
+    const catalog = await buildCatalog(season);
     const offers = [];
     for (const sf of catalog.storefronts || []) {
       for (const entry of sf.catalogEntries || []) {
         offers.push({
           offerId: entry.offerId,
-          name: String(entry.devName || "").replace(/^\[VELOCITY\]\s*/i, ""),
+          name: String(entry.devName || "").replace(/^\[(VELOCITY|VIRTUAL)\]\s*/i, ""),
           price: entry.prices?.[0]?.finalPrice ?? 0,
           templateId: entry.itemGrants?.[0]?.templateId || null,
           section: sf.name,
         });
       }
     }
-    res.json({ ok: true, offers });
+    res.json({
+      ok: true,
+      expiration: catalog.expiration,
+      refreshIntervalHrs: catalog.refreshIntervalHrs,
+      offers,
+    });
   } catch (err) {
     res.status(500).json({ ok: false, reason: err.message });
   }
+});
+
+app.post("/ogfn-panel/api/shop/rotate", requirePanelAuth, async (req, res) => {
+  const { forceRotateShop, buildCatalog, ROTATION_HOURS } = require("../structs/itemShop");
+  forceRotateShop();
+  const season = parseInt(req.body?.season, 10) || 4;
+  const catalog = await buildCatalog(season);
+  log.backend(`Panel forced item shop rotation (S${season})`);
+  res.json({
+    ok: true,
+    expiration: catalog.expiration,
+    refreshIntervalHrs: ROTATION_HOURS,
+    featured: catalog.storefronts.find((s) => s.name === "BRWeeklyStorefront")?.catalogEntries?.length || 0,
+    daily: catalog.storefronts.find((s) => s.name === "BRDailyStorefront")?.catalogEntries?.length || 0,
+  });
 });
 
 app.post("/ogfn-panel/api/buy", async (req, res) => {
