@@ -1,0 +1,27 @@
+{
+  "name": "ogfn",
+  "version": "1.0.0",
+  "description": "OGFN - an open-source Fortnite backend emulator (LawinServer/NovaFN style) for booting legally-owned Fortnite builds against a local server.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "fortnite",
+    "backend",
+    "emulator",
+    "ogfn",
+    "private-server"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "node-forge": "^1.4.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.17.0",
+    "xmlbuilder": "^15.1.1"
+  }
+}

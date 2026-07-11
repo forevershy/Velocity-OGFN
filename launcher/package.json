@@ -1,0 +1,86 @@
+{
+  "name": "velocity-app",
+  "version": "1.0.0",
+  "description": "Velocity Launcher - desktop launcher + bundled backend for OG Fortnite private servers.",
+  "main": "main.js",
+  "author": "Velocity",
+  "scripts": {
+    "start": "electron .",
+    "prepare-backend": "node scripts/prepare-backend.js",
+    "make-ico": "node scripts/make-ico.js",
+    "patch-icon": "node scripts/make-ico.js && node scripts/patch-exe-icon.js",
+    "patch-asar": "node scripts/patch-asar.js",
+    "patch-backend": "node scripts/patch-backend.js",
+    "dist": "npm run make-ico && npm run prepare-backend && electron-builder --win && node scripts/patch-exe-icon.js",
+    "dist:portable": "npm run make-ico && npm run prepare-backend && electron-builder --win portable && node scripts/patch-exe-icon.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "discord-rpc": "^4.0.1"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "png-to-ico": "^3.0.2",
+    "rcedit": "^5.0.2"
+  },
+  "build": {
+    "appId": "dev.velocity.launcher",
+    "productName": "Velocity",
+    "copyright": "Velocity",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "discord-presence.js",
+      "net-setup.js",
+      "launch-game.js",
+      "launch-profiles.js",
+      "gameserver-host.js",
+      "dll-inject.js",
+      "renderer/**/*",
+      "renderer/season-icons/**/*",
+      "build/icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "backend-bundle",
+        "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Velocity-Setup-${version}.${ext}",
+      "sign": null,
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "Velocity-Portable-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "include": "build/installer.nsh",
+      "shortcutName": "Velocity"
+    }
+  }
+}

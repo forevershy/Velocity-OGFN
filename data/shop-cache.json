@@ -1,0 +1,1028 @@
+﻿{
+  "day": "2026-7-10:modern",
+  "catalog": {
+    "refreshIntervalHrs": 24,
+    "dailyPurchaseHrs": 24,
+    "expiration": "2099-12-31T23:59:59.999Z",
+    "storefronts": [
+      {
+        "name": "BRWeeklyStorefront",
+        "catalogEntries": [
+          {
+            "devName": "[VELOCITY] Arroyo Pack",
+            "offerId": "velocity:AthenaBackpack:BID_472_DesertOpsCamo",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 2000,
+                "finalPrice": 2000,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 2000
+              }
+            ],
+            "meta": {
+              "SectionId": "Featured",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Normal",
+              "templateId": "AthenaBackpack:BID_472_DesertOpsCamo",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Featured"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Normal"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaBackpack:BID_472_DesertOpsCamo"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaBackpack:BID_472_DesertOpsCamo",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaBackpack:BID_472_DesertOpsCamo",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": -1,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Mogul Ski Bag (CHN)",
+            "offerId": "velocity:AthenaBackpack:BID_020_SkiGirl_CHN",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1500,
+                "finalPrice": 1500,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1500
+              }
+            ],
+            "meta": {
+              "SectionId": "Featured",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Normal",
+              "templateId": "AthenaBackpack:BID_020_SkiGirl_CHN",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Featured"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Normal"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaBackpack:BID_020_SkiGirl_CHN"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaBackpack:BID_020_SkiGirl_CHN",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaBackpack:BID_020_SkiGirl_CHN",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": -1,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Pineapple Strummer",
+            "offerId": "velocity:AthenaBackpack:BID_231_TropicalFemale",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1200,
+                "finalPrice": 1200,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1200
+              }
+            ],
+            "meta": {
+              "SectionId": "Featured",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Normal",
+              "templateId": "AthenaBackpack:BID_231_TropicalFemale",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Featured"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Normal"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaBackpack:BID_231_TropicalFemale"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaBackpack:BID_231_TropicalFemale",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaBackpack:BID_231_TropicalFemale",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": -1,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Jaywalking",
+            "offerId": "velocity:AthenaDance:EID_Jaywalking",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 900,
+                "finalPrice": 900,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 900
+              }
+            ],
+            "meta": {
+              "SectionId": "Featured",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Normal",
+              "templateId": "AthenaDance:EID_Jaywalking",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Featured"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Normal"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaDance:EID_Jaywalking"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaDance:EID_Jaywalking",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaDance:EID_Jaywalking",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": -1,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Shortbread Slicers",
+            "offerId": "velocity:AthenaPickaxe:Pickaxe_ID_329_GingerbreadCookie1H",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1000,
+                "finalPrice": 1000,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1000
+              }
+            ],
+            "meta": {
+              "SectionId": "Featured",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Normal",
+              "templateId": "AthenaPickaxe:Pickaxe_ID_329_GingerbreadCookie1H",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Featured"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Normal"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaPickaxe:Pickaxe_ID_329_GingerbreadCookie1H"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaPickaxe:Pickaxe_ID_329_GingerbreadCookie1H",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaPickaxe:Pickaxe_ID_329_GingerbreadCookie1H",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": -1,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Side Hustle",
+            "offerId": "velocity:AthenaDance:EID_StepBreakdance",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 900,
+                "finalPrice": 900,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 900
+              }
+            ],
+            "meta": {
+              "SectionId": "Featured",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Normal",
+              "templateId": "AthenaDance:EID_StepBreakdance",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Featured"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Normal"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaDance:EID_StepBreakdance"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaDance:EID_StepBreakdance",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaDance:EID_StepBreakdance",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": -1,
+            "catalogGroupPriority": 0
+          }
+        ]
+      },
+      {
+        "name": "BRDailyStorefront",
+        "catalogEntries": [
+          {
+            "devName": "[VELOCITY] Dread Oracle Axe",
+            "offerId": "velocity:AthenaPickaxe:Pickaxe_ID_451_DarkEaglePurple",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1300,
+                "finalPrice": 1300,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1300
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaPickaxe:Pickaxe_ID_451_DarkEaglePurple",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaPickaxe:Pickaxe_ID_451_DarkEaglePurple"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaPickaxe:Pickaxe_ID_451_DarkEaglePurple",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaPickaxe:Pickaxe_ID_451_DarkEaglePurple",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Purple Jam",
+            "offerId": "velocity:AthenaBackpack:BID_455_NeonGraffitiFemale",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1200,
+                "finalPrice": 1200,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1200
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaBackpack:BID_455_NeonGraffitiFemale",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaBackpack:BID_455_NeonGraffitiFemale"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaBackpack:BID_455_NeonGraffitiFemale",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaBackpack:BID_455_NeonGraffitiFemale",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Slow Clap",
+            "offerId": "velocity:AthenaDance:EID_SlowClap",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 400,
+                "finalPrice": 400,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 400
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaDance:EID_SlowClap",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaDance:EID_SlowClap"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaDance:EID_SlowClap",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaDance:EID_SlowClap",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Man O' War",
+            "offerId": "velocity:AthenaGlider:Glider_ID_155_Jellyfish",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1400,
+                "finalPrice": 1400,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1400
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaGlider:Glider_ID_155_Jellyfish",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaGlider:Glider_ID_155_Jellyfish"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaGlider:Glider_ID_155_Jellyfish",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaGlider:Glider_ID_155_Jellyfish",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Deep Sea Destroyer",
+            "offerId": "velocity:AthenaCharacter:CID_320_Athena_Commando_M_Nautilus",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1500,
+                "finalPrice": 1500,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1500
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaCharacter:CID_320_Athena_Commando_M_Nautilus",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaCharacter:CID_320_Athena_Commando_M_Nautilus"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaCharacter:CID_320_Athena_Commando_M_Nautilus",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaCharacter:CID_320_Athena_Commando_M_Nautilus",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Valkyrie",
+            "offerId": "velocity:AthenaCharacter:CID_222_Athena_Commando_F_DarkViking",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 2000,
+                "finalPrice": 2000,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 2000
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaCharacter:CID_222_Athena_Commando_F_DarkViking",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaCharacter:CID_222_Athena_Commando_F_DarkViking"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaCharacter:CID_222_Athena_Commando_F_DarkViking",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaCharacter:CID_222_Athena_Commando_F_DarkViking",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Shooting Starstaff",
+            "offerId": "velocity:AthenaPickaxe:Pickaxe_ID_447_SpaceWandererMale",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1000,
+                "finalPrice": 1000,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1000
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaPickaxe:Pickaxe_ID_447_SpaceWandererMale",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaPickaxe:Pickaxe_ID_447_SpaceWandererMale"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaPickaxe:Pickaxe_ID_447_SpaceWandererMale",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaPickaxe:Pickaxe_ID_447_SpaceWandererMale",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          },
+          {
+            "devName": "[VELOCITY] Special Delivery",
+            "offerId": "velocity:AthenaBackpack:BID_043_Pizza",
+            "fulfillmentIds": [],
+            "dailyLimit": -1,
+            "weeklyLimit": -1,
+            "monthlyLimit": -1,
+            "categories": [],
+            "prices": [
+              {
+                "currencyType": "MtxCurrency",
+                "currencySubType": "",
+                "regularPrice": 1500,
+                "finalPrice": 1500,
+                "saleExpiration": "2099-12-31T23:59:59.999Z",
+                "basePrice": 1500
+              }
+            ],
+            "meta": {
+              "SectionId": "Daily",
+              "LayoutId": "Velocity.Shop",
+              "TileSize": "Small",
+              "templateId": "AthenaBackpack:BID_043_Pizza",
+              "inDate": "2018-04-30T00:00:00.000Z",
+              "outDate": "2099-12-31T23:59:59.999Z"
+            },
+            "metaInfo": [
+              {
+                "key": "SectionId",
+                "value": "Daily"
+              },
+              {
+                "key": "LayoutId",
+                "value": "Velocity.Shop"
+              },
+              {
+                "key": "TileSize",
+                "value": "Small"
+              },
+              {
+                "key": "templateId",
+                "value": "AthenaBackpack:BID_043_Pizza"
+              }
+            ],
+            "matchFilter": "",
+            "filterWeight": 0,
+            "appStoreId": [],
+            "requirements": [
+              {
+                "requirementType": "DenyOnItemOwnership",
+                "requiredId": "AthenaBackpack:BID_043_Pizza",
+                "minQuantity": 1
+              }
+            ],
+            "offerType": "StaticPrice",
+            "giftInfo": {
+              "bIsEnabled": true,
+              "forcedGiftBoxTemplateId": "",
+              "purchaseRequirements": [],
+              "giftRecordIds": []
+            },
+            "refundable": true,
+            "displayAssetPath": "",
+            "itemGrants": [
+              {
+                "templateId": "AthenaBackpack:BID_043_Pizza",
+                "quantity": 1
+              }
+            ],
+            "sortPriority": 0,
+            "catalogGroupPriority": 0
+          }
+        ]
+      }
+    ]
+  }
+}

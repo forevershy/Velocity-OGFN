@@ -1,0 +1,34 @@
+{
+  "owner": {
+    "username": "YourUsername",
+    "accountId": "",
+    "displayTag": "[OWNER]",
+    "bannerIcon": "StandardBanner1",
+    "bannerColor": "DefaultColor1"
+  },
+  "panelToken": "",
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3551,
+    "xmppPort": 80
+  },
+  "bAllowAnyAccountId": true,
+  "bEnableMatchmaking": true,
+  "matchmaker": {
+    "ip": "127.0.0.1",
+    "port": 80
+  },
+  "gameserver": {
+    "ip": "127.0.0.1",
+    "port": 7777,
+    "playlist": "Playlist_DefaultSolo",
+    "region": "NAE",
+    "autoStart": true,
+    "gamePath": "C:\\Path\\To\\Your\\Build\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe",
+    "dllPath": ""
+  },
+  "message": {
+    "enabled": true,
+    "text": "Welcome to Velocity!\n\nThis is your own private Fortnite backend.\nHave fun and don't be toxic :)"
+  }
+}

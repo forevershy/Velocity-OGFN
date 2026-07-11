@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a1f5e"/>
+      <stop offset="35%" stop-color="#3b2f8f"/>
+      <stop offset="70%" stop-color="#5b3cff"/>
+      <stop offset="100%" stop-color="#29d3ff"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="62%" r="30%">
+      <stop offset="0%" stop-color="#ffe9b0" stop-opacity="0.95"/>
+      <stop offset="60%" stop-color="#ff9de0" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ff9de0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mtn1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#241a52"/>
+      <stop offset="100%" stop-color="#160f38"/>
+    </linearGradient>
+    <linearGradient id="mtn2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1440"/>
+      <stop offset="100%" stop-color="#0d0a26"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#sky)"/>
+  <circle cx="640" cy="440" r="360" fill="url(#sun)"/>
+
+  <!-- stars -->
+  <g fill="#ffffff" opacity="0.7">
+    <circle cx="120" cy="80" r="1.6"/><circle cx="300" cy="140" r="1.2"/><circle cx="500" cy="60" r="1.4"/>
+    <circle cx="820" cy="110" r="1.3"/><circle cx="1000" cy="70" r="1.6"/><circle cx="1160" cy="150" r="1.2"/>
+    <circle cx="220" cy="200" r="1"/><circle cx="700" cy="180" r="1"/><circle cx="1100" cy="220" r="1.1"/>
+  </g>
+
+  <!-- distant mountains -->
+  <path d="M0 470 L180 350 L340 460 L520 320 L700 470 L900 340 L1080 460 L1280 360 L1280 720 L0 720 Z" fill="url(#mtn2)"/>
+  <!-- floating island -->
+  <g opacity="0.96">
+    <ellipse cx="640" cy="520" rx="230" ry="42" fill="#120c30"/>
+    <path d="M430 520 Q640 660 850 520 Q760 600 640 600 Q520 600 430 520 Z" fill="#0d0a26"/>
+    <rect x="560" y="452" width="160" height="70" rx="8" fill="#2a2456"/>
+    <rect x="588" y="420" width="104" height="42" rx="6" fill="#372f70"/>
+    <rect x="604" y="392" width="72" height="34" rx="6" fill="#463c8f"/>
+  </g>
+  <!-- foreground mountains -->
+  <path d="M0 560 L220 430 L430 560 L640 440 L860 570 L1080 450 L1280 560 L1280 720 L0 720 Z" fill="url(#mtn1)"/>
+</svg>

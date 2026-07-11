@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Velocity Panel</title>
+    <link rel="icon" href="icon.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <img class="logo" src="icon.png" alt="Velocity" />
+          <div>
+            <h1>Velocity</h1>
+            <p>Control Panel</p>
+          </div>
+        </div>
+        <nav>
+          <button class="nav-item active" data-view="dashboard">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Dashboard
+          </button>
+          <button class="nav-item" data-view="players">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5M14 20c0-2 1.5-3.5 3.5-3.5"/></svg>
+            Players
+          </button>
+          <button class="nav-item" data-view="owner">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.7 1.7 0 00-1-1.51 1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.7 1.7 0 00.34-1.87 1.7 1.7 0 00-1.51-1H3a2 2 0 010-4h.09a1.7 1.7 0 001.51-1 1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 012.83-2.83l.06.06a1.7 1.7 0 001.87.34H9a1.7 1.7 0 001-1.51V3a2 2 0 014 0v.09a1.7 1.7 0 001 1.51 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 012.83 2.83l-.06.06a1.7 1.7 0 00-.34 1.87 1.7 1.7 0 001.51 1H21a2 2 0 010 4h-.09a1.7 1.7 0 00-1.51 1z"/></svg>
+            Owner Panel
+          </button>
+          <button class="nav-item" data-view="cosmetics">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2l2.2 6.8H21l-5.5 4.2 2.1 6.5L12 16.8 6.4 19.5l2.1-6.5L3 8.8h6.8L12 2z"/></svg>
+            Cosmetics
+          </button>
+          <button class="nav-item" data-view="motd">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v13a1 1 0 001 1z"/><path d="M8 8h8M8 12h8"/></svg>
+            Message of the Day
+          </button>
+          <button class="nav-item" data-view="hotfixes">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14.7 6.3a3.2 3.2 0 00-4.5 4.5l-5.8 5.8a1.5 1.5 0 002.1 2.1l5.8-5.8a3.2 3.2 0 004.5-4.5L16 5.2l-1.3 1.1z"/></svg>
+            Hotfixes
+          </button>
+          <button class="nav-item" data-view="settings">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2"/></svg>
+            Settings
+          </button>
+        </nav>
+        <div class="status-chip" id="statusChip">
+          <span class="dot"></span> Connecting…
+        </div>
+      </aside>
+
+      <main class="content">
+        <!-- Dashboard -->
+        <section class="view active" id="view-dashboard">
+          <header class="view-header">
+            <h2>Dashboard</h2>
+            <p>Live overview of your OGFN backend.</p>
+          </header>
+          <div class="cards" id="statCards"></div>
+        </section>
+
+        <!-- Players -->
+        <section class="view" id="view-players">
+          <header class="view-header">
+            <h2>Players</h2>
+            <p>Connected clients and known accounts.</p>
+          </header>
+          <h3>Online now</h3>
+          <div class="table-wrap">
+            <table class="table" id="onlineTable">
+              <thead><tr><th>Display Name</th><th>Account ID</th><th>Resource</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <h3>Known accounts</h3>
+          <div class="table-wrap">
+            <table class="table" id="accountsTable">
+              <thead><tr><th>Account ID</th><th>Items</th><th>V-Bucks</th><th>Level</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Owner Panel -->
+        <section class="view" id="view-owner">
+          <header class="view-header">
+            <h2>Owner Panel</h2>
+            <p>Grant cosmetics, V-Bucks, levels, and manage custom skins for your account.</p>
+          </header>
+
+          <div class="owner-grid">
+            <div class="panel-card owner-card">
+              <h3 class="card-title">Your account</h3>
+              <label>Target account ID</label>
+              <input id="ownerAccount" placeholder="account id" />
+              <p class="hint" id="ownerHint">Loading owner…</p>
+              <div class="btn-row">
+                <button class="btn small" id="ownerUseMe">Use owner account</button>
+                <button class="btn small" id="ownerRefreshPlayers">Refresh players</button>
+              </div>
+              <select id="ownerPlayerPick" class="owner-pick">
+                <option value="">Pick from known accounts…</option>
+              </select>
+            </div>
+
+            <div class="panel-card owner-card">
+              <h3 class="card-title">Quick actions</h3>
+              <div class="btn-row wrap">
+                <button class="btn primary" id="ownerGrantAll">Grant all cosmetics</button>
+                <button class="btn" id="ownerMaxVbucks">Max V-Bucks (999,999)</button>
+                <button class="btn" id="ownerLevel100">Set level 100</button>
+                <button class="btn" id="ownerBp100">Battle pass tier 100</button>
+              </div>
+              <div class="divider"></div>
+              <label>V-Bucks</label>
+              <div class="btn-row wrap">
+                <button class="btn small vb-btn" data-amt="1000">+1,000</button>
+                <button class="btn small vb-btn" data-amt="5000">+5,000</button>
+                <button class="btn small vb-btn" data-amt="15000">+15,000</button>
+                <button class="btn small vb-btn" data-amt="50000">+50,000</button>
+              </div>
+              <div class="inline-fields">
+                <input id="ownerVbucksSet" type="number" placeholder="Set exact amount" />
+                <button class="btn small" id="ownerVbucksSetBtn">Set</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card owner-wide">
+            <h3 class="card-title">Cosmetics catalog</h3>
+            <div class="catalog-toolbar">
+              <input id="catalogSearch" placeholder="Search skins, emotes, pickaxes…" />
+              <select id="catalogType">
+                <option value="">All types</option>
+                <option value="skin">Skins</option>
+                <option value="backpack">Backpacks</option>
+                <option value="pickaxe">Pickaxes</option>
+                <option value="glider">Gliders</option>
+                <option value="emote">Emotes</option>
+              </select>
+              <label class="inline-check"><input type="checkbox" id="catalogCustomOnly" /> Custom only</label>
+              <button class="btn small" id="catalogSearchBtn">Search</button>
+            </div>
+            <p class="hint" id="catalogMeta">Search to browse items.</p>
+            <div class="catalog-grid" id="catalogGrid"></div>
+            <div class="btn-row">
+              <button class="btn small" id="catalogMore" style="display:none">Load more</button>
+            </div>
+          </div>
+
+          <div class="panel-card owner-wide owner-skin-card">
+            <h3 class="card-title">Owner skin <span class="badge owner-badge">OWNER</span></h3>
+            <p class="hint">Pick any cosmetic — it goes in your locker as OWNER, favorited, and first in the list.</p>
+            <div class="owner-skin-form">
+              <input id="ownerSkinName" placeholder="Display name (optional)" />
+              <input id="ownerSkinTemplate" placeholder="AthenaCharacter:CID_… or paste from catalog" />
+              <select id="ownerSkinType">
+                <option value="skin">Skin</option>
+                <option value="backpack">Backpack</option>
+                <option value="pickaxe">Pickaxe</option>
+                <option value="glider">Glider</option>
+                <option value="emote">Emote</option>
+              </select>
+              <button class="btn primary" id="ownerSkinGrantBtn">Create &amp; grant OWNER skin</button>
+            </div>
+            <p class="hint">Tip: click a catalog item below with Shift held to fill this form. Custom pak skins still need the asset in your build.</p>
+          </div>
+
+          <div class="owner-grid">
+            <div class="panel-card owner-card">
+              <h3 class="card-title">Grant by template ID</h3>
+              <input id="ownerTemplate" placeholder="AthenaCharacter:CID_…" />
+              <div class="quick-picks" id="ownerQuickPicks"></div>
+              <button class="btn primary" id="ownerGrantOne">Grant item</button>
+            </div>
+
+            <div class="panel-card owner-card">
+              <h3 class="card-title">Register custom skin</h3>
+              <input id="customName" placeholder="Skin display name" />
+              <input id="customTemplate" placeholder="AthenaCharacter:CID_YourSkin" />
+              <select id="customType">
+                <option value="skin">Skin</option>
+                <option value="backpack">Backpack</option>
+                <option value="pickaxe">Pickaxe</option>
+                <option value="glider">Glider</option>
+                <option value="emote">Emote</option>
+              </select>
+              <select id="customRarity">
+                <option value="owner">OWNER</option>
+                <option value="common">Common</option>
+                <option value="uncommon">Uncommon</option>
+                <option value="rare">Rare</option>
+                <option value="epic">Epic</option>
+                <option value="legendary">Legendary</option>
+                <option value="mythic">Mythic</option>
+              </select>
+              <input id="customNote" placeholder="Note (optional)" />
+              <input id="customPakFile" placeholder="Linked .pak filename (optional)" />
+              <input id="customGrantTemplate" placeholder="Fallback templateId if no pak yet (optional)" />
+              <button class="btn primary" id="customAddBtn">Add custom cosmetic</button>
+              <p class="hint">Use OWNER rarity + Grant to pin it first. Or use the Owner skin box above for one-click create &amp; grant.</p>
+            </div>
+          </div>
+
+          <div class="panel-card owner-wide owner-skin-card">
+            <h3 class="card-title">Custom skin .pak files</h3>
+            <p class="hint">Drop <code>.pak</code> files into the folder below (custom models like Glamrock Freddy), install into your build, then register + grant the matching <code>AthenaCharacter:CID_…</code>.</p>
+            <div id="customPakDir" class="hint mono"></div>
+            <div id="customPakFiles" class="custom-list"></div>
+            <div class="owner-skin-form">
+              <input id="pakName" placeholder="Skin name (e.g. Glamrock Freddy)" />
+              <input id="pakFile" placeholder="Filename.pak (must be in folder above)" />
+              <input id="pakTemplate" placeholder="AthenaCharacter:CID_… (must match pak)" />
+              <button class="btn" id="pakRegisterBtn">Register pak skin</button>
+              <button class="btn primary" id="pakInstallBtn">Install paks to build</button>
+              <button class="btn" id="ownerPerksBtn">Apply [OWNER] tag + Epic banner</button>
+            </div>
+          </div>
+
+          <div class="panel-card owner-wide">
+            <h3 class="card-title">Your custom cosmetics</h3>
+            <div class="custom-list" id="customList"></div>
+          </div>
+        </section>
+
+        <!-- Cosmetics (legacy quick grant) -->
+        <section class="view" id="view-cosmetics">
+          <header class="view-header">
+            <h2>Cosmetics</h2>
+            <p>Grant items and set V-Bucks for an account.</p>
+          </header>
+          <div class="panel-card">
+            <label>Account ID</label>
+            <input id="grantAccount" placeholder="e.g. a2fd49f8a592391579f671b63cecd8bc" />
+            <label>Item template ID</label>
+            <input id="grantTemplate" placeholder="AthenaCharacter:CID_028_Athena_Commando_F" />
+            <div class="quick-picks" id="quickPicks"></div>
+            <button class="btn primary" id="grantBtn">Grant item</button>
+            <div class="divider"></div>
+            <label>Set V-Bucks</label>
+            <input id="vbucksAmount" type="number" placeholder="13500" />
+            <button class="btn" id="vbucksBtn">Set V-Bucks</button>
+          </div>
+        </section>
+
+        <!-- MOTD -->
+        <section class="view" id="view-motd">
+          <header class="view-header">
+            <h2>Message of the Day</h2>
+            <p>Shown in the in-game news feed and launcher announcement.</p>
+          </header>
+          <div class="panel-card">
+            <label class="switch">
+              <span>Enabled</span>
+              <input type="checkbox" id="motdEnabled" />
+              <span class="switch-track"></span>
+            </label>
+            <label>Message text</label>
+            <textarea id="motdText" rows="6"></textarea>
+            <button class="btn primary" id="motdSave">Save MOTD</button>
+          </div>
+        </section>
+
+        <!-- Hotfixes -->
+        <section class="view" id="view-hotfixes">
+          <header class="view-header">
+            <h2>Hotfixes</h2>
+            <p>Edit cloudstorage <code>.ini</code> files served to clients.</p>
+          </header>
+          <div class="panel-card">
+            <label>File</label>
+            <select id="hotfixSelect"></select>
+            <label>New file name <span style="color:var(--muted);font-weight:400">optional</span></label>
+            <input id="hotfixNewName" placeholder="e.g. DefaultEngine.ini" />
+            <label>Contents</label>
+            <textarea id="hotfixContent" rows="14" spellcheck="false"></textarea>
+            <button class="btn primary" id="hotfixSave">Save hotfix</button>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section class="view" id="view-settings">
+          <header class="view-header">
+            <h2>Settings</h2>
+            <p>Runtime server toggles.</p>
+          </header>
+          <div class="panel-card">
+            <label class="switch">
+              <span>Enable matchmaking</span>
+              <input type="checkbox" id="mmEnabled" />
+              <span class="switch-track"></span>
+            </label>
+            <button class="btn primary" id="settingsSave">Save settings</button>
+          </div>
+        </section>
+
+        <div id="toast" class="toast"></div>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

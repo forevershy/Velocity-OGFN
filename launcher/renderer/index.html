@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://fortnite-api.com https://cdn2.unrealengine.com data:;" />
+    <title>Velocity Launcher</title>
+    <link rel="icon" href="icon.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Frameless drag region + window controls -->
+    <div class="titlebar">
+      <div class="titlebar-drag"></div>
+      <div class="titlebar-controls">
+        <button id="btnMin" class="win-btn" aria-label="Minimize">&#8211;</button>
+        <button id="btnClose" class="win-btn close" aria-label="Close">&#10005;</button>
+      </div>
+    </div>
+
+    <!-- ONBOARDING -->
+    <div id="onboarding" class="onboarding">
+      <div class="modal">
+        <div class="dots">
+          <span class="dot active" data-step="0"></span>
+          <span class="dot" data-step="1"></span>
+          <span class="dot" data-step="2"></span>
+          <span class="dot" data-step="3"></span>
+        </div>
+
+        <!-- Step 0: birth date -->
+        <section class="ob-step active" data-step="0">
+          <h2>Welcome to Velocity</h2>
+          <p class="sub">Enter your date of birth to continue.</p>
+          <div class="dob">
+            <select id="dobMonth"></select>
+            <select id="dobDay"></select>
+            <select id="dobYear"></select>
+          </div>
+        </section>
+
+        <!-- Step 1: username -->
+        <section class="ob-step" data-step="1">
+          <h2>Welcome to Velocity</h2>
+          <p class="sub">Pick the username that everyone will see.</p>
+          <input id="obUsername" class="big-input" placeholder="Enter a username" maxlength="20" />
+        </section>
+
+        <!-- Step 2: notifications -->
+        <section class="ob-step" data-step="2">
+          <h2>Welcome to Velocity</h2>
+          <p class="sub">Choose which announcements you want to see.</p>
+          <div class="notif-toggle">
+            <button class="notif-opt" data-notif="subscribed">Subscribed</button>
+            <button class="notif-opt active" data-notif="all">All <span class="bell">&#128276;</span></button>
+          </div>
+        </section>
+
+        <!-- Step 3: terms -->
+        <section class="ob-step" data-step="3">
+          <h2>Welcome to Velocity</h2>
+          <div class="tos">
+            <strong>TERMS OF SERVICE</strong>
+            <p>Last updated July 08, 2026</p>
+            <p>
+              Velocity is a fan-made, open-source Fortnite backend emulator provided for personal,
+              educational, and game-preservation purposes only. It is not affiliated with,
+              endorsed by, or connected to Epic Games, Inc.
+            </p>
+            <p>
+              You agree to only use Velocity with game builds you legally own, to not use it to
+              impersonate official services, and to not use it to cheat on live/official servers.
+              The software is provided "as is" without warranty of any kind.
+            </p>
+            <p>By continuing you accept these terms and take full responsibility for your use.</p>
+          </div>
+          <label class="tos-check">
+            <input type="checkbox" id="tosCheck" />
+            <span>By checking this box, you agree to Velocity's terms and conditions.</span>
+          </label>
+        </section>
+
+        <div class="ob-actions">
+          <button id="obBack" class="btn ghost">Back</button>
+          <button id="obContinue" class="btn primary">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN LAUNCHER -->
+    <div id="launcher" class="launcher hidden">
+      <aside class="rail">
+        <div class="rail-logo"><img src="icon.png" alt="Velocity" /></div>
+        <button id="railKill" class="rail-btn rail-kill" data-tip="Kill Fortnite" aria-label="Kill Fortnite">
+          <svg class="rail-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2v8" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+            <circle cx="12" cy="14" r="7" fill="none" stroke="currentColor" stroke-width="1.75"/>
+            <path d="M9.5 14h5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <nav class="rail-nav">
+          <button class="rail-btn active" data-view="home" data-tip="Home">
+            <svg class="rail-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5L12 3l8 7.5V20a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1v-9.5z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="rail-btn" data-view="library" data-tip="Library">
+            <svg class="rail-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12a1 1 0 011 1v15H6.5A2.5 2.5 0 014 17.5v-12A1.5 1.5 0 015.5 4z" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M9 4v15M13 8h4M13 12h4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          </button>
+          <button class="rail-btn" data-view="changelog" data-tip="News">
+            <svg class="rail-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          </button>
+          <button class="rail-btn" data-view="cosmetics" data-tip="Cosmetics">
+            <svg class="rail-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8H21l-5.5 4.2 2.1 6.5L12 16.8 6.4 19.5l2.1-6.5L3 8.8h6.8L12 2z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></svg>
+          </button>
+        </nav>
+        <button id="railSettings" class="rail-btn rail-settings" data-tip="Settings">
+          <svg class="rail-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </button>
+      </aside>
+
+      <main class="stage">
+        <div class="stage-bg"></div>
+        <div class="stage-overlay"></div>
+
+        <!-- HOME -->
+        <div class="stage-view active" id="view-home">
+          <div class="home-bottom">
+            <div class="announcement">
+              <svg class="announce-megaphone" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 10v4h4l5 4V6L7 10H3z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+                <path d="M16 8.5a4.5 4.5 0 010 7" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+              </svg>
+              <div class="announce-content">
+                <div class="announce-title">Announcement</div>
+                <div class="announce-body" id="announceBody">Loading…</div>
+              </div>
+            </div>
+
+            <div class="play-area">
+              <button id="launchBtn" class="nova-play-btn">
+                <svg class="play-dl-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M8 11l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4 19h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="play-text">
+                  <span id="launchText">Download</span>
+                  <span id="launchSub">Select a season in Library</span>
+                </div>
+              </button>
+              <button id="modsWrench" class="nova-tool-btn" title="Mods">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14.7 6.3a3.2 3.2 0 00-4.5 4.5l-5.8 5.8a1.5 1.5 0 002.1 2.1l5.8-5.8a3.2 3.2 0 004.5-4.5L16 5.2l-1.3 1.1z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIBRARY -->
+        <div class="stage-view panel-view library-view" id="view-library">
+          <div class="view-head library-head">
+            <div>
+              <h2 class="view-title">Library</h2>
+              <p class="lib-hint">Click <b>Install</b> to download a season straight to your PC. Already have the files? Use <b>Locate</b> to link your existing build folder.</p>
+            </div>
+            <div class="chapter-tabs panel-tabs" id="chapterTabs">
+              <button class="chapter-tab active" data-chapter="all">All</button>
+              <button class="chapter-tab" data-chapter="1">Ch 1</button>
+              <button class="chapter-tab" data-chapter="2">Ch 2</button>
+              <button class="chapter-tab" data-chapter="3">Ch 3</button>
+              <button class="chapter-tab" data-chapter="4">Ch 4</button>
+              <button class="chapter-tab" data-chapter="5">Ch 5</button>
+            </div>
+          </div>
+          <div id="seasonGrid" class="season-grid"></div>
+        </div>
+
+        <!-- NEWS -->
+        <div class="stage-view panel-view news-view" id="view-changelog">
+          <h2 class="view-title">News</h2>
+          <div class="news-feed" id="changelogList"></div>
+        </div>
+
+        <!-- COSMETICS -->
+        <div class="stage-view panel-view cosmetics-view" id="view-cosmetics">
+          <div class="view-head cosmetics-head">
+            <div>
+              <h2 class="view-title">Cosmetics</h2>
+              <p class="lib-hint cosmetics-meta"><span id="cosCount">Loading catalog…</span> · Click to grant to <b id="cosAccount">your account</b></p>
+            </div>
+            <div class="panel-tabs cos-tabs" id="cosTabs">
+              <button class="cos-tab active" data-type="all">All</button>
+              <button class="cos-tab" data-type="skin">Skins</button>
+              <button class="cos-tab" data-type="pickaxe">Pickaxes</button>
+              <button class="cos-tab" data-type="glider">Gliders</button>
+              <button class="cos-tab" data-type="emote">Emotes</button>
+            </div>
+          </div>
+          <div class="panel-bar cos-toolbar">
+            <input type="search" id="cosSearch" class="panel-input cos-search" placeholder="Search by name…" />
+            <select id="cosSeason" class="panel-input cos-season">
+              <option value="all">All seasons (Ch1 → Ch5)</option>
+            </select>
+            <button type="button" id="cosGrantAll" class="btn cos-grant-all">Grant all</button>
+          </div>
+          <div id="cosLoading" class="cos-loading hidden">Loading cosmetics…</div>
+          <div id="cosGrid" class="cos-grid"></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings" class="settings hidden">
+      <div class="settings-card">
+        <div class="settings-head">
+          <div>
+            <h2>Settings</h2>
+            <p class="settings-desc">Configure your account, game, and multiplayer.</p>
+          </div>
+          <button id="settingsClose" class="settings-close" aria-label="Close">&#10005;</button>
+        </div>
+
+        <div class="settings-body">
+          <section class="settings-section">
+            <div class="section-title">Account</div>
+            <div class="field">
+              <label for="setUsername">Display name</label>
+              <input id="setUsername" placeholder="VelocityPlayer" />
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <div class="section-title">Discord</div>
+            <p class="section-hint">Show Velocity on your Discord profile while the launcher or game is open.</p>
+            <label class="toggle-row">
+              <span class="toggle-text">
+                <b>Rich Presence</b>
+                <small>Requires Discord desktop app and a Client ID below</small>
+              </span>
+              <span class="toggle">
+                <input type="checkbox" id="setDiscordPresence" checked />
+                <span class="toggle-slider"></span>
+              </span>
+            </label>
+            <div class="field">
+              <label for="setDiscordClientId">Application Client ID</label>
+              <input id="setDiscordClientId" placeholder="From discord.com/developers" />
+              <p class="field-hint">Create an app, copy its Application ID, and upload a Rich Presence image named <b>velocity</b>.</p>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <div class="section-title">Game</div>
+            <div class="field">
+              <label for="setGamePath">Fortnite executable</label>
+              <div class="input-row">
+                <input id="setGamePath" placeholder="FortniteClient-Win64-Shipping.exe" readonly />
+                <button id="pickGame" class="btn btn-sm">Browse</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="setBackground">Background</label>
+              <div class="input-row">
+                <input id="setBackground" placeholder="Default background" readonly />
+                <button id="pickBackground" class="btn btn-sm">Browse</button>
+                <button id="resetBackground" class="btn btn-sm btn-ghost">Reset</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="setExtraArgs">Launch arguments <span class="optional">optional</span></label>
+              <input id="setExtraArgs" placeholder="-log -windowed" />
+            </div>
+            <label class="toggle-row" id="autoBackendRow">
+              <span class="toggle-text">
+                <b>Auto-start backend</b>
+                <small>Starts the Velocity server when you launch (host mode)</small>
+              </span>
+              <span class="toggle">
+                <input type="checkbox" id="setAutoBackend" />
+                <span class="toggle-slider"></span>
+              </span>
+            </label>
+          </section>
+
+          <section class="settings-section">
+            <div class="section-title">Game connection</div>
+            <p class="section-hint">One-time setup so Fortnite talks to Velocity instead of Epic's servers. Requires Administrator approval.</p>
+            <div id="netStatusCard" class="info-card">
+              <div class="info-row">
+                <span class="info-label">Status</span>
+                <code id="netStatusText">Checking…</code>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Certificate</span>
+                <code id="netCertText">—</code>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Hosts redirect</span>
+                <code id="netHostsText">—</code>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Port forward</span>
+                <code id="netProxyText">—</code>
+              </div>
+            </div>
+            <p id="netSetupHint" class="section-hint hidden" style="color:#ffb347;margin-top:8px">
+              Required before you can play. Click <b>Set up connection</b> and choose <b>Yes</b> on the Administrator prompt.
+            </p>
+            <div class="input-row" style="margin-top:12px">
+              <button type="button" id="netSetupBtn" class="btn btn-sm primary">Set up connection</button>
+              <button type="button" id="netManualBtn" class="btn btn-sm btn-ghost">Manual setup</button>
+              <button type="button" id="netTeardownBtn" class="btn btn-sm btn-ghost">Remove setup</button>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <div class="section-title">Multiplayer</div>
+            <p class="section-hint">Host on your PC, or join a friend’s server.</p>
+
+            <div class="mode-pills">
+              <label class="mode-pill">
+                <input type="radio" name="serverMode" value="host" checked />
+                <span>&#127968; Host</span>
+              </label>
+              <label class="mode-pill">
+                <input type="radio" name="serverMode" value="join" />
+                <span>&#128101; Join</span>
+              </label>
+            </div>
+
+            <div id="hostInfo" class="info-card host-card">
+              <div class="info-row">
+                <span class="info-label">Your LAN IP</span>
+                <code id="hostLanIp">—</code>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Share with friends</span>
+                <div class="copy-row">
+                  <code id="hostShare">—</code>
+                  <button type="button" id="copyShare" class="btn btn-sm btn-ghost">Copy</button>
+                </div>
+              </div>
+              <p class="info-note">Allow ports <b>3551</b>, <b>443</b>, and <b>80</b> in Windows Firewall. Port-forward for internet play.</p>
+            </div>
+
+            <div id="joinBlock" class="field hidden">
+              <label for="setBackendHost">Friend's server address</label>
+              <input id="setBackendHost" placeholder="192.168.1.50:3551" />
+            </div>
+          </section>
+        </div>
+
+        <div class="settings-footer">
+          <button id="settingsSave" class="btn primary full">Save changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODS MODAL -->
+    <div id="mods" class="settings hidden">
+      <div class="settings-card">
+        <div class="settings-head">
+          <h2>Mods</h2>
+          <button id="modsClose" class="win-btn close">&#10005;</button>
+        </div>
+        <p class="hint">Gameplay tweaks applied when you run the game.</p>
+
+        <label class="switch mod-row">
+          <input type="checkbox" id="modEditOnRelease" />
+          <span><b>Edit on Release</b><small>Confirm edits when you let go of the edit key.</small></span>
+        </label>
+        <label class="switch mod-row">
+          <input type="checkbox" id="modInstantReset" />
+          <span><b>Instant Reset</b><small>Reset a structure edit instantly.</small></span>
+        </label>
+        <label class="switch mod-row">
+          <input type="checkbox" id="modSprintDefault" />
+          <span><b>Sprint by Default</b><small>Always sprint without holding the key.</small></span>
+        </label>
+        <label class="switch mod-row">
+          <input type="checkbox" id="modDisablePreEdit" />
+          <span><b>Disable Pre-Edit</b><small>Skip the pre-edit selection step.</small></span>
+        </label>
+
+        <button id="modsSave" class="btn primary full">Save mods</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="seasons.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Velocity Owner Skin",
+    "type": "skin",
+    "templateId": "AthenaCharacter:CID_Velocity_Owner",
+    "grantTemplateId": "AthenaCharacter:CID_030_Athena_Commando_M_Halloween",
+    "rarity": "owner",
+    "custom": true,
+    "note": "Grants Skull Trooper in-game until a custom .pak adds CID_Velocity_Owner."
+  }
+]

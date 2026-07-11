@@ -1,0 +1,14 @@
+{
+  "name": "velocity-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord owner bot for Velocity OGFN backend",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "register": "node register-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3"
+  }
+}

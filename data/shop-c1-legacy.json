@@ -1,0 +1,394 @@
+[
+  {
+    "name": "Aerial Assault One",
+    "type": "glider",
+    "templateId": "AthenaGlider:Glider_ID_001",
+    "rarity": "rare",
+    "chapter": 1,
+    "season": 4,
+    "displayAssetPath": "/Game/Catalog/DisplayAssets/DA_Featured_GliderMiG.DA_Featured_GliderMiG",
+    "offerId": "v2:/km5i4yvqxd8sqav1r4tk4qlsjolqkd7o5g25p6elcbqwtlsulqnu6hv84ug58i9c"
+  },
+  {
+    "name": "Aerial Assault Trooper",
+    "type": "outfit",
+    "templateId": "AthenaCharacter:CID_017_Athena_Commando_M",
+    "rarity": "rare",
+    "chapter": 1,
+    "season": 4,
+    "displayAssetPath": "/Game/Catalog/DisplayAssets/DA_Featured_SMaleHID017.DA_Featured_SMaleHID017",
+    "offerId": "v2:/6icfozpr9g7o1gxperhc5rl8dty1o4rzlszmiky0iafc012w5gcdczvsvbvqw8fv"
+  },
+  {
+    "name": "Renegade Raider",
+    "type": "outfit",
+    "templateId": "AthenaCharacter:CID_028_Athena_Commando_F",
+    "rarity": "rare",
+    "chapter": 1,
+    "season": 4,
+    "displayAssetPath": "/Game/Catalog/DisplayAssets/DA_Featured_SFemaleHID028.DA_Featured_SFemaleHID028",
+    "offerId": "v2:/erpaf2rm87d5xgdtqpgx3qyqwrjmn5gsog0cu792enrxh9k1jckzjvgvn6qu7fq7"
+  },
+  {
+    "name": "Raider's Revenge",
+    "type": "pickaxe",
+    "templateId": "AthenaPickaxe:Pickaxe_Lockjaw",
+    "rarity": "rare",
+    "chapter": 1,
+    "season": 4,
+    "displayAssetPath": "/Game/Catalog/DisplayAssets/DA_Featured_PickaxeLockjaw.DA_Featured_PickaxeLockjaw",
+    "offerId": "v2:/w6aq7n8ma7gz342b4wus42hmkqz8suurbdvjo51ug6on7j9rme577eax92rlt4g9"
+  },
+  {
+    "name": "Squire Shield",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_001_BlueSquire",
+    "rarity": "rare",
+    "chapter": 1,
+    "season": 2
+  },
+  {
+    "name": "Royale Shield",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_002_RoyaleKnight",
+    "rarity": "rare",
+    "chapter": 1,
+    "season": 2
+  },
+  {
+    "name": "Red Shield",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_003_RedKnight",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Black Shield",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_004_BlackKnight",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 2
+  },
+  {
+    "name": "Raptor Satchel",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_005_Raptor",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_006_SkiDude",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories (USA)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_007_SkiDude_USA",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories (CAN)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_008_SkiDude_CAN",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories (GBR)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_009_SkiDude_GBR",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories (FRA)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_010_SkiDude_FRA",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories (GER)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_011_SkiDude_GER",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories (CHN)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_012_SkiDude_CHN",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Alpine Accessories (KOR)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_013_SkiDude_KOR",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_014_SkiGirl",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag (USA)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_015_SkiGirl_USA",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag (CAN)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_016_SkiGirl_CAN",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag (GBR)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_017_SkiGirl_GBR",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag (FRA)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_018_SkiGirl_FRA",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag (GER)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_019_SkiGirl_GER",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag (CHN)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_020_SkiGirl_CHN",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Mogul Ski Bag (KOR)",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_021_SkiGirl_KOR",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Love Wings",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_022_Cupid",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Cuddle Bow",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_023_Pinkbear",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Astro",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_024_Space",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Precision",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_025_Tactical",
+    "rarity": "rare",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Brite Bag",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_026_Brite",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Rust Bucket",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_027_Scavenger",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Dark Matter",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_028_SpaceBlack",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Backup Plan",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_029_RetroGrey",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Catalyst",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_030_TacticalRogue",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Scaly",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_031_Dinosaur",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Pursuit",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_032_FounderMale",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Skirmish",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_033_FounderFemale",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Six String",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_034_RockerPunk",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Buckler",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_035_Scathach",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Iron Cage",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_036_Raven",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Hard Boiled",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_037_BunnyMale",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Eggshell",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_038_BunnyFemale",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Dark Void",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_039_SpaceBlackFemale",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Royale Flags",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_040_Wukong",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Hatchling",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_041_PajamaParty",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Fish Tank",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_042_Fishhead",
+    "rarity": "legendary",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Special Delivery",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_043_Pizza",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  },
+  {
+    "name": "Steelcast",
+    "type": "backpack",
+    "templateId": "AthenaBackpack:BID_044_Robo",
+    "rarity": "epic",
+    "chapter": 1,
+    "season": 3
+  }
+]

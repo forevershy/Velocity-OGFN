@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+launcher/node_modules/
+discord-bot/node_modules/
+
+# Build output
+launcher/dist/
+launcher/backend-bundle/
+launcher/build/icon.ico
+launcher/_asar-live/
+launcher/_asar-verify/
+launcher/_asar-check/
+launcher/_icon-extract/
+
+# Local TLS keys (generated per install)
+.certs/
+*.key
+*.pem
+
+# User / machine config (copy from *.example.json)
+config/config.json
+discord-bot/config.json
+
+# Runtime data (optional — keep empty defaults in repo if you prefer)
+# data/*.json
+
+# User cloud saves
+cloudstorage/user/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.profiles/
+
+# Local test installs
+VelocityTestInstall/
