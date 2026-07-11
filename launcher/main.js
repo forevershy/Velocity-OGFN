@@ -1355,6 +1355,34 @@ ipcMain.handle("game:launch", async () => {
           "Backend is not running (ports 3551, 8080, 8443). Close Velocity completely and reopen it, then try Play again.",
       };
     }
+    // Keep backend gameserver config in sync with the selected build.
+    try {
+      const http = require("http");
+      await new Promise((resolve) => {
+        const body = JSON.stringify({
+          gameserver: {
+            gamePath: cfg.gamePath,
+            dllPath: cfg.gameserverDll || "",
+            autoStart: true,
+          },
+        });
+        const req = http.request(
+          {
+            hostname: "127.0.0.1",
+            port: 3551,
+            path: "/ogfn-panel/api/config",
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
+          },
+          () => resolve()
+        );
+        req.on("error", () => resolve());
+        req.write(body);
+        req.end();
+      });
+    } catch {
+      /* optional sync */
+    }
   } else if (!(await pingBackend())) {
     return { ok: false, reason: "Cannot reach the host server. Check the IP in Settings." };
   }

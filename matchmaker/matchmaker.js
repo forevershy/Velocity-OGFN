@@ -4,9 +4,16 @@ const WebSocket = require("ws");
 const config = require("../config/config.json");
 const log = require("../utils/logger");
 const { setPresence } = require("../structs/playerPresence");
-const { createSession, setAccountContext, getLastQueuedAccount } = require("../structs/matchSessions");
+const { createSession, getLastQueuedAccount } = require("../structs/matchSessions");
+const { isPortOpen, waitForPort } = require("../structs/gameserver");
 
-const MM_PORT = parseInt(process.env.VELOCITY_MM_PORT || String(config.matchmaker?.port || 80), 10);
+function gsPort() {
+  return Number(config.gameserver?.port || 7777);
+}
+
+function gsHost() {
+  return config.gameserver?.ip || "127.0.0.1";
+}
 
 function send(ws, name, payload) {
   if (ws.readyState !== WebSocket.OPEN) return;
@@ -23,9 +30,7 @@ function onConnection(ws, req) {
   const ticketId = crypto.createHash("md5").update(`ticket:${Date.now()}`).digest("hex");
   const matchId = crypto.createHash("md5").update(`match:${Date.now()}`).digest("hex");
   let session = null;
-  let accountId = null;
   let aborted = false;
-
   const timers = [];
 
   function schedule(fn, ms) {
@@ -49,7 +54,7 @@ function onConnection(ws, req) {
         totalPlayers: 1,
         connectedPlayers: 1,
       }),
-    1000
+    800
   );
   schedule(
     () =>
@@ -57,15 +62,15 @@ function onConnection(ws, req) {
         state: "Queued",
         ticketId,
         queuedPlayers: 0,
-        estimatedWaitSec: 30,
+        estimatedWaitSec: 10,
         status: {},
       }),
-    2000
+    1500
   );
 
-  // Start gameserver early, wait until port 7777 is up, THEN assign session + Play.
   schedule(async () => {
     if (aborted) return;
+
     const queuedId = getLastQueuedAccount();
     const ctx = queuedId ? require("../structs/matchSessions").getAccountContext(queuedId) : {};
 
@@ -73,7 +78,7 @@ function onConnection(ws, req) {
       state: "Queued",
       ticketId,
       queuedPlayers: 0,
-      estimatedWaitSec: 45,
+      estimatedWaitSec: 30,
       status: { message: "Starting gameserver..." },
     });
 
@@ -83,29 +88,39 @@ function onConnection(ws, req) {
 
     if (aborted) return;
 
-    if (!gsResult.ok && !gsResult.skipped) {
-      log.matchmaker(`Gameserver ensure failed: ${gsResult.reason || "unknown"}`);
+    const port = gsPort();
+    const host = gsHost();
+    let ready = await isPortOpen(port, host);
+
+    if (!ready) {
+      ready = await waitForPort(port, host, gsResult.ok ? 90000 : 15000);
+    }
+
+    if (!ready) {
+      const reason =
+        gsResult.reason ||
+        "Gameserver did not start on port 7777. Set your build in Velocity Settings and ensure Reboot DLL is installed for Chapter 1.";
+      log.matchmaker(`Matchmaking failed: ${reason}`);
       send(ws, "StatusUpdate", {
         state: "Queued",
         ticketId,
         queuedPlayers: 0,
         estimatedWaitSec: 0,
-        status: { error: gsResult.reason || "Gameserver failed to start" },
+        status: { error: reason },
       });
-      // Do not send Play — that causes Network Connection Lost on a dead :7777.
       setTimeout(() => {
         try {
           ws.close();
         } catch {
           /* ignore */
         }
-      }, 2000);
+      }, 2500);
       return;
     }
 
     send(ws, "StatusUpdate", { state: "SessionAssignment", matchId });
 
-    accountId = getLastQueuedAccount();
+    const accountId = getLastQueuedAccount();
     const accountCtx = accountId ? require("../structs/matchSessions").getAccountContext(accountId) : {};
     session = createSession({
       accountId,
@@ -116,7 +131,7 @@ function onConnection(ws, req) {
     });
     if (accountId) setPresence(accountId, "in_match", session.id);
 
-    await new Promise((r) => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, 600));
     if (aborted) return;
 
     send(ws, "Play", {
@@ -124,8 +139,8 @@ function onConnection(ws, req) {
       sessionId: session.id,
       joinDelaySec: 1,
     });
-    log.matchmaker(`Assigned session ${session.id.slice(0, 8)} -> ${config.gameserver?.ip}:${config.gameserver?.port}`);
-  }, 2500);
+    log.matchmaker(`Play -> session ${session.id.slice(0, 8)} @ ${host}:${port}`);
+  }, 2200);
 }
 
 function attach(server, label) {
@@ -143,7 +158,7 @@ function start(httpsServer, httpServer) {
   const handler = attach(null, "shared");
   const { registerMatchmaker } = require("../ws/router");
   registerMatchmaker(handler);
-  log.matchmaker(`Matchmaker ready (ws://${config.matchmaker?.ip || "127.0.0.1"}:${MM_PORT} via portproxy)`);
+  log.matchmaker(`Matchmaker ready (ws://matchmaking-service-prod.ol.epicgames.com via :80 portproxy -> :8080)`);
 
   if (config.matchmaker?.dedicatedPort) {
     const dedicated = new WebSocket.Server({
@@ -158,7 +173,7 @@ function start(httpsServer, httpServer) {
 }
 
 function noteAccountQueued(accountId, ctx) {
-  if (accountId) setAccountContext(accountId, ctx);
+  if (accountId) require("../structs/matchSessions").setAccountContext(accountId, ctx);
 }
 
 module.exports = { start, noteAccountQueued };

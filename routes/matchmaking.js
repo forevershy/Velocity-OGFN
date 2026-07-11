@@ -25,9 +25,11 @@ function mm() {
 }
 
 function serviceUrl() {
-  const { ip, port } = mm();
-  if (!port || port === 80) return `ws://${ip}`;
-  return `ws://${ip}:${port}`;
+  const { port } = mm();
+  // Use Epic hostname so the client matches expected matchmaking endpoint (hosts redirect to us).
+  const host = "matchmaking-service-prod.ol.epicgames.com";
+  if (!port || port === 80) return `ws://${host}`;
+  return `ws://${host}:${port}`;
 }
 
 function toPlaylistName(bucketId) {
@@ -105,12 +107,12 @@ function sessionPayload(sessionId, req) {
     publicPlayers: [],
     privatePlayers: [],
     totalPlayers: 1,
-    allowJoinInProgress: false,
-    shouldAdvertise: false,
-    isDedicated: false,
+    allowJoinInProgress: true,
+    shouldAdvertise: true,
+    isDedicated: true,
     usesStats: false,
-    allowInvites: false,
-    usesPresence: false,
+    allowInvites: true,
+    usesPresence: true,
     allowJoinViaPresence: true,
     allowJoinViaPresenceFriendsOnly: false,
     buildUniqueId,
@@ -144,8 +146,8 @@ app.get("/fortnite/api/game/v2/matchmakingservice/ticket/player/:accountId", (re
   require("../structs/gameserver")
     .ensureGameserver({ playlist })
     .then((gs) => {
-      if (!gs.ok && !gs.skipped) {
-        require("../utils/logger").matchmaker(`Gameserver prewarm failed: ${gs.reason || "unknown"}`);
+      if (!gs.ok) {
+        require("../utils/logger").matchmaker(`Gameserver prewarm: ${gs.reason || "failed"}`);
       }
     })
     .catch(() => {});
