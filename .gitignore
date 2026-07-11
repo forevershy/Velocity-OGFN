@@ -3,7 +3,7 @@ node_modules/
 launcher/node_modules/
 discord-bot/node_modules/
 
-# Build output
+# Build output (installers uploaded via GitHub Releases instead)
 launcher/dist/
 launcher/backend-bundle/
 launcher/build/icon.ico
@@ -12,17 +12,12 @@ launcher/_asar-verify/
 launcher/_asar-check/
 launcher/_icon-extract/
 
-# Local TLS keys (generated per install)
+# Local TLS keys (auto-generated on first run)
 .certs/
 *.key
-*.pem
 
-# User / machine config (copy from *.example.json)
-config/config.json
+# Discord bot secrets (optional — copy config.example.json)
 discord-bot/config.json
-
-# Runtime data (optional — keep empty defaults in repo if you prefer)
-# data/*.json
 
 # User cloud saves
 cloudstorage/user/

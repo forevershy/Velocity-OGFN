@@ -6,7 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "start": "node index.js",
-    "dev": "node --watch index.js"
+    "dev": "node --watch index.js",
+    "setup": "npm install && npm install --prefix launcher && npm install --prefix discord-bot"
   },
   "keywords": [
     "fortnite",

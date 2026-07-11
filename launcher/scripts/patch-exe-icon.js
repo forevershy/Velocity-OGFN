@@ -54,7 +54,8 @@ function patchExe(exePath) {
   const result = spawnSync(rceditExe, args, { stdio: "inherit" });
   if (result.error) throw result.error;
   if (result.status !== 0) {
-    throw new Error(`rcedit failed for ${resolved} (exit ${result.status})`);
+    console.warn(`Skip icon patch (rcedit exit ${result.status}): ${resolved}`);
+    return false;
   }
   console.log("Done:", resolved);
   return true;

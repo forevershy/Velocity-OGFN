@@ -1,8 +1,57 @@
-# OGFN
+# Velocity OGFN
 
-**OGFN** is an open-source Fortnite backend emulator (in the spirit of LawinServer / NovaFN / Project Reboot). It emulates Epic's Fortnite web services locally so a Fortnite build you already own can boot to the lobby against your own server — auth, profiles/locker, hotfixes, friends, party (XMPP), and more.
+**Velocity OGFN** is an open-source Fortnite backend emulator with a desktop launcher. It emulates Epic's Fortnite web services locally so a Fortnite build you already own can boot to the lobby against your own server — auth, profiles/locker, hotfixes, friends, party (XMPP), and more.
 
-> ⚠️ **Legal / usage note:** This project only implements a backend API. It does **not** include, distribute, or help you obtain Fortnite game files, and it does not touch Epic's live servers. Use it only with builds you legally own, for personal/educational/preservation purposes. Don't use it to impersonate Epic services or to enable cheating on official servers.
+> ⚠️ **Legal / usage note:** This project only implements a backend API. It does **not** include, distribute, or help you obtain Fortnite game files. Use it only with builds you legally own.
+
+---
+
+## Download for friends (easiest)
+
+**Pre-built Windows installer (recommended):**
+
+1. Go to **[GitHub Releases](https://github.com/forevershy/Velocity-OGFN/releases)** and download **Velocity-Setup-1.0.0.exe** (or the portable `.exe`).
+2. Run the installer.
+3. Open **Velocity** → complete onboarding (pick a username).
+4. **Settings → Game connection** → click **Set up connection** (run as Administrator when prompted).
+5. **Library** → add your Fortnite build folder → verify → select → **Run Game**.
+
+Everyone needs their **own legally-owned Fortnite build**. To play together, use the **same season/build** and point joiners at the host IP in Settings.
+
+See [DISTRIBUTE.md](./DISTRIBUTE.md) for hosting vs joining.
+
+---
+
+## Clone from GitHub (developers)
+
+```bash
+git clone https://github.com/forevershy/Velocity-OGFN.git
+cd Velocity-OGFN
+```
+
+**Windows:** double-click `setup.bat` (or run `.\setup.ps1`).
+
+**Manual setup:**
+
+```bash
+npm install
+cd launcher && npm install && cd ..
+copy config\config.example.json config\config.json   # if config.json is missing
+npm start                                            # backend only
+cd launcher && npm start                             # desktop launcher
+```
+
+Edit `config/config.json` to set your owner username, MOTD, and optional gameserver paths.
+
+**Build an installer to share:**
+
+```bash
+cd launcher
+npm run dist          # Velocity-Setup-1.0.0.exe
+npm run dist:portable # single portable exe
+```
+
+Output is in `launcher/dist/`.
 
 ---
 
@@ -22,19 +71,8 @@
 
 - [Node.js](https://nodejs.org/) 18+ (tested on v22)
 - A Fortnite build (**not provided**)
-- A way to redirect the game's HTTPS traffic to this server (an SSL bypass / proxy DLL such as the ones bundled with popular launchers)
 
-## Setup
-
-```bash
-git clone https://github.com/forevershy/Velocity-OGFN.git
-cd Velocity-OGFN
-npm install
-cp config/config.example.json config/config.json   # Windows: copy config\config.example.json config\config.json
-npm start
-```
-
-Edit `config/config.json` with your username, gameserver paths, and optional `panelToken` before going live.
+## Quick start (backend only)
 
 ```bash
 npm start
@@ -66,7 +104,7 @@ In the launcher's **Settings** (gear icon) you:
 
 Pressing **Launch** starts the backend (if enabled), waits for it to come up, then spawns the game with the proper auth args pointed at your OGFN account.
 
-> The launcher spawns the game and backend and points auth at OGFN, but — like every emulator launcher — it does **not** perform the HTTPS redirect / SSL-bypass step for you. You still need a proxy/redirect layer so the game's traffic reaches `127.0.0.1:3551`. See "How a client connects" below.
+> Velocity includes **hosts redirect + local HTTPS certs** via Settings → Game connection. Run that once as Administrator so the game reaches your local backend.
 
 ## Control panel
 
