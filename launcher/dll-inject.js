@@ -14,7 +14,7 @@ function injectorPath() {
 }
 
 function launcherPath() {
-  return path.join(cacheDir(), "velocity-gs-launch.exe");
+  return path.join(cacheDir(), "velocity-gs-launch-v2.exe");
 }
 
 async function ensureInjector() {
@@ -184,7 +184,7 @@ public class VelocityGsLaunch {
 
   public static int Main(string[] args) {
     if (args.Length < 3) {
-      Console.Error.WriteLine("usage: exe cwd dll [gameArgs...]");
+      Console.Error.WriteLine("usage: exe cwd dll [--visible] [gameArgs...]");
       return 2;
     }
     string exe = args[0];
@@ -192,9 +192,19 @@ public class VelocityGsLaunch {
     string dll = args[2];
     if (!System.IO.File.Exists(exe) || !System.IO.File.Exists(dll)) return 3;
 
+    int argStart = 3;
+    uint flags = CREATE_SUSPENDED | CREATE_NO_WINDOW;
+    short showWindow = 0;
+
+    if (args.Length > 3 && args[3] == "--visible") {
+      flags = CREATE_SUSPENDED;
+      showWindow = 9;
+      argStart = 4;
+    }
+
     StringBuilder cmd = new StringBuilder();
     cmd.Append('"').Append(exe).Append('"');
-    for (int i = 3; i < args.Length; i++) {
+    for (int i = argStart; i < args.Length; i++) {
       cmd.Append(' ');
       if (args[i].IndexOf(' ') >= 0) cmd.Append('"').Append(args[i]).Append('"');
       else cmd.Append(args[i]);
@@ -202,8 +212,9 @@ public class VelocityGsLaunch {
 
     STARTUPINFO si = new STARTUPINFO();
     si.cb = Marshal.SizeOf(typeof(STARTUPINFO));
+    si.wShowWindow = showWindow;
+    if (showWindow != 0) si.dwFlags = 0x00000001;
     PROCESS_INFORMATION pi;
-    uint flags = CREATE_SUSPENDED | CREATE_NO_WINDOW;
     if (!CreateProcess(null, cmd.ToString(), IntPtr.Zero, IntPtr.Zero, false, flags, IntPtr.Zero, cwd, ref si, out pi)) {
       Console.Error.WriteLine("CreateProcess failed " + Marshal.GetLastWin32Error());
       return 4;
@@ -256,18 +267,20 @@ async function injectDll(pid, dllPath) {
 /**
  * Start exe suspended, inject DLL, resume. Returns { ok, pid }.
  */
-async function launchSuspendedWithDll(exePath, args, cwd, dllPath) {
+async function launchSuspendedWithDll(exePath, args, cwd, dllPath, options = {}) {
   if (!exePath || !dllPath || !fs.existsSync(exePath) || !fs.existsSync(dllPath)) {
     return { ok: false, reason: "exe or dll missing" };
   }
   try {
     const launcher = await ensureSuspendedLauncher();
+    const launcherArgs = [path.resolve(exePath), cwd || path.dirname(exePath), path.resolve(dllPath)];
+    if (options.showWindow) launcherArgs.push("--visible");
+    launcherArgs.push(...args);
     return new Promise((resolve) => {
-      const child = spawn(
-        launcher,
-        [path.resolve(exePath), cwd || path.dirname(exePath), path.resolve(dllPath), ...args],
-        { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] }
-      );
+      const child = spawn(launcher, launcherArgs, {
+        windowsHide: true,
+        stdio: ["ignore", "pipe", "pipe"],
+      });
       let out = "";
       let err = "";
       child.stdout.on("data", (d) => (out += d.toString()));

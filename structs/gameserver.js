@@ -6,7 +6,7 @@ const http = require("http");
 
 const config = require("../config/config.json");
 const log = require("../utils/logger");
-const { injectDll } = require("./dll-inject");
+const { injectDll, launchSuspendedWithDll } = require("./dll-inject");
 const {
   parseBuild,
   resolveGamePath,
@@ -76,7 +76,11 @@ if ($hwnd -eq [IntPtr]::Zero) { exit 2 }
 [VelocityKeys]::SetForegroundWindow($hwnd) | Out-Null
 Start-Sleep -Milliseconds 500
 [VelocityKeys]::Tap(0x72) # F3 host
+Start-Sleep -Milliseconds 500
+[VelocityKeys]::Tap(0x0D) # Enter confirm
 Start-Sleep -Milliseconds 400
+[VelocityKeys]::Tap(0x72) # F3 again
+Start-Sleep -Milliseconds 300
 [VelocityKeys]::Tap(0x71) # F2 backup
 exit 0
 `;
@@ -276,47 +280,64 @@ async function ensureGameserver(overrides = {}) {
     port,
     useExchangeCode: build >= 8.51,
     exchangeCode,
+    rebootClientHost: needsDll,
   });
 
   try {
     appendLog(`\n[${new Date().toISOString()}] Starting gameserver build=${build} port=${port}`);
     appendLog(args.join(" "));
 
-    const logFd = fs.openSync(logPath(), "a");
-    gameserverProcess = spawn(gamePath, args, {
-      cwd: win64,
-      detached: true,
-      stdio: ["ignore", logFd, logFd],
-      windowsHide: false,
-    });
-    gameserverProcess.unref();
-    const pid = gameserverProcess.pid;
-    gameserverPid = pid;
-    gameserverProcess.on("exit", () => {
-      gameserverProcess = null;
-      gameserverPid = null;
-      try {
-        fs.closeSync(logFd);
-      } catch {
-        /* ignore */
-      }
-    });
+    let pid = null;
 
-    if (dllPath && fs.existsSync(dllPath) && pid) {
+    if (needsDll) {
+      appendLog("(reboot suspended inject)");
+      const launched = await launchSuspendedWithDll(gamePath, args, win64, dllPath, { showWindow: true });
+      appendLog(`suspended launch: ${JSON.stringify(launched)}`);
+      if (!launched.ok || !launched.pid) {
+        starting = false;
+        return {
+          ok: false,
+          reason: launched.reason || "Could not start Reboot gameserver process.",
+        };
+      }
+      pid = launched.pid;
+      gameserverPid = pid;
+    } else {
+      const logFd = fs.openSync(logPath(), "a");
+      gameserverProcess = spawn(gamePath, args, {
+        cwd: win64,
+        detached: true,
+        stdio: ["ignore", logFd, logFd],
+        windowsHide: false,
+      });
+      gameserverProcess.unref();
+      pid = gameserverProcess.pid;
+      gameserverPid = pid;
+      gameserverProcess.on("exit", () => {
+        gameserverProcess = null;
+        gameserverPid = null;
+        try {
+          fs.closeSync(logFd);
+        } catch {
+          /* ignore */
+        }
+      });
+    }
+
+    if (needsDll && pid) {
+      // Reboot needs the client to finish loading before F3 can open port 7777.
+      await new Promise((r) => setTimeout(r, 28000));
+      for (let i = 0; i < 12; i++) {
+        const keyed = await pressRebootHostKeys(pid);
+        appendLog(`host keys attempt ${i + 1}: ${keyed}`);
+        if (await isPortOpen(port, host)) break;
+        await new Promise((r) => setTimeout(r, 8000));
+      }
+    } else if (dllPath && fs.existsSync(dllPath) && pid) {
       await new Promise((r) => setTimeout(r, 12000));
       const injected = await injectDll(pid, dllPath);
       appendLog(`inject pid=${pid} ok=${injected}`);
       log.matchmaker(injected ? `Injected Reboot into gameserver PID ${pid}` : `Reboot inject failed for PID ${pid}`);
-
-      if (needsDll) {
-        await new Promise((r) => setTimeout(r, 8000));
-        for (let i = 0; i < 5; i++) {
-          const keyed = await pressRebootHostKeys(pid);
-          appendLog(`host keys attempt ${i + 1}: ${keyed}`);
-          if (await isPortOpen(port, host)) break;
-          await new Promise((r) => setTimeout(r, 6000));
-        }
-      }
     }
 
     const ready = await waitForPort(port, host, 120000);
@@ -332,7 +353,7 @@ async function ensureGameserver(overrides = {}) {
     return {
       ok: false,
       reason: needsDll
-        ? "Gameserver did not open port 7777. In the gameserver window press F3 to host, or check Gameserver.log."
+        ? "Gameserver did not open port 7777. A Reboot window should appear — press F3 to host, then queue again."
         : "Gameserver did not open port 7777. Check Gameserver.log in %AppData%\\velocity-app.",
     };
   } catch (err) {

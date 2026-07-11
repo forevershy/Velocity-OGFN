@@ -55,6 +55,7 @@ function buildGameserverArgs({
   port,
   useExchangeCode = false,
   exchangeCode = "",
+  rebootClientHost = false,
 }) {
   const pl = playlist || gs.playlist || "Playlist_DefaultSolo";
   const listenPort = Number(port || gs.port || 7777);
@@ -65,7 +66,7 @@ function buildGameserverArgs({
       : [`-AUTH_LOGIN=${username}`, "-AUTH_PASSWORD=ogfn", "-AUTH_TYPE=epic"];
 
   const args = [
-    "-server",
+    ...(rebootClientHost ? [] : ["-server"]),
     "-log",
     "-nosteam",
     "-nosound",

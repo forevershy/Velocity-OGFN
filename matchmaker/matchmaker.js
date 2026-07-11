@@ -102,19 +102,18 @@ function onConnection(ws, req) {
         "Gameserver did not start on port 7777. Set your build in Velocity Settings and ensure Reboot DLL is installed for Chapter 1.";
       log.matchmaker(`Matchmaking failed: ${reason}`);
       send(ws, "StatusUpdate", {
-        state: "Queued",
+        state: "Failed",
         ticketId,
         queuedPlayers: 0,
         estimatedWaitSec: 0,
-        status: { error: reason },
+        status: { errorCode: "GAMESERVER_START_FAILED", errorMessage: reason },
       });
-      setTimeout(() => {
-        try {
-          ws.close();
-        } catch {
-          /* ignore */
-        }
-      }, 2500);
+      await new Promise((r) => setTimeout(r, 800));
+      try {
+        ws.close(4000, reason.slice(0, 120));
+      } catch {
+        /* ignore */
+      }
       return;
     }
 
