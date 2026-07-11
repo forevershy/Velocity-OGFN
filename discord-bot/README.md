@@ -8,7 +8,8 @@ Discord slash commands for your Velocity OGFN server — matching Project Veloci
 2. Copy `config.example.json` → `config.json` and fill in token, clientId, guildId, ownerUserIds
 3. `npm install`
 4. `npm run register` — register slash commands
-5. Start Velocity, then `npm start`
+5. Start Velocity — the bot **auto-starts** with the launcher when `discord-bot/config.json` has a valid token
+6. Or run manually: `npm start` (from this folder) or `npm run bot` (from repo root)
 
 ## Commands
 

@@ -7,7 +7,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "setup": "npm install && npm install --prefix launcher && npm install --prefix discord-bot"
+    "setup": "npm install && npm install --prefix launcher && npm install --prefix discord-bot",
+    "bot": "node discord-bot/index.js",
+    "bot:register": "node discord-bot/register-commands.js"
   },
   "keywords": [
     "fortnite",

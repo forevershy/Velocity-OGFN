@@ -31,17 +31,33 @@ async function api(pathname, method = "GET", body) {
   const headers = { "Content-Type": "application/json" };
   if (config.panelToken) headers["X-Velocity-Token"] = config.panelToken;
 
-  const res = await fetch(`${API}${pathname}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12_000);
 
-  const text = await res.text();
   try {
-    return { status: res.status, data: JSON.parse(text) };
-  } catch {
-    return { status: res.status, data: { ok: false, reason: text || res.statusText } };
+    const res = await fetch(`${API}${pathname}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
+    });
+
+    const text = await res.text();
+    try {
+      return { status: res.status, data: JSON.parse(text) };
+    } catch {
+      return { status: res.status, data: { ok: false, reason: text || res.statusText } };
+    }
+  } catch (err) {
+    if (err.name === "AbortError") {
+      return { status: 0, data: { ok: false, reason: "Backend timed out — is Velocity running?" } };
+    }
+    return {
+      status: 0,
+      data: { ok: false, reason: "Backend offline — start Velocity first, then try again." },
+    };
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -79,9 +95,16 @@ function denyOwner(interaction) {
 
 function fail(interaction, message, ephemeral = true) {
   const payload = { content: message, ephemeral };
-  if (interaction.deferred) return interaction.editReply(payload);
+  if (interaction.deferred || interaction.replied) return interaction.editReply(payload);
   return interaction.reply(payload);
 }
+
+function respond(interaction, payload) {
+  if (interaction.deferred || interaction.replied) return interaction.editReply(payload);
+  return interaction.reply(payload);
+}
+
+const EPHEMERAL_COMMANDS = new Set(["appeal", "claimvbucks"]);
 
 const PRESENCE_INTERVAL_MS = 30_000;
 
@@ -119,6 +142,10 @@ client.on("interactionCreate", async (interaction) => {
   if (OWNER_COMMANDS.has(cmd) && !isOwner(interaction)) return denyOwner(interaction);
 
   try {
+    if (!interaction.deferred && !interaction.replied) {
+      await interaction.deferReply({ ephemeral: EPHEMERAL_COMMANDS.has(cmd) });
+    }
+
     // ---- Player commands ----
     if (cmd === "create") {
       const username = interaction.options.getString("username", true);
@@ -127,7 +154,7 @@ client.on("interactionCreate", async (interaction) => {
         discordUserId: interaction.user.id,
       });
       if (!data.ok) return fail(interaction, data.reason || "Could not create account.");
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Account created",
@@ -151,7 +178,7 @@ client.on("interactionCreate", async (interaction) => {
       });
       if (!data.ok) return fail(interaction, data.reason || "Appeal failed.");
       await logAction(client, `📩 Ban appeal from **${username}** (${interaction.user.tag})`);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Appeal submitted",
@@ -169,7 +196,7 @@ client.on("interactionCreate", async (interaction) => {
       if (!user) return fail(interaction, "Link an account with `/create` or pass the user option.");
       const { data } = await api("/buy", "POST", { username: user, item });
       if (!data.ok) return fail(interaction, data.reason || "Purchase failed.");
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Purchase complete", `**${user}** bought **${item}** from today's shop.`, 0x37d67a)],
       });
     }
@@ -185,7 +212,7 @@ client.on("interactionCreate", async (interaction) => {
         discordUserId: interaction.user.id,
       });
       if (!data.ok) return fail(interaction, data.reason || "Rename failed.");
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed("Username changed", `**${oldUsername}** → **${newUsername}**\nUse the new name in Velocity.`, 0x37d67a),
         ],
@@ -196,7 +223,7 @@ client.on("interactionCreate", async (interaction) => {
       const user = interaction.options.getString("user", true);
       const { data } = await api(`/check-user?username=${encodeURIComponent(user)}`);
       if (!data.ok) return fail(interaction, data.reason || "User not found.");
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             `User: ${data.username || user}`,
@@ -224,7 +251,7 @@ client.on("interactionCreate", async (interaction) => {
       if (!user) return fail(interaction, "Link an account with `/create` or pass the user option.");
       const { data } = await api("/claim-vbucks", "POST", { username: user });
       if (!data.ok) return fail(interaction, data.reason || "Claim failed.");
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Daily V-Bucks claimed",
@@ -241,7 +268,7 @@ client.on("interactionCreate", async (interaction) => {
       const lines = (data.entries || []).map(
         (e) => `**#${e.rank}** ${e.username || e.accountId.slice(0, 8)} — **${e.arenaHype}** hype`
       );
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Arena Leaderboard",
@@ -256,7 +283,7 @@ client.on("interactionCreate", async (interaction) => {
       const lines = (data.codes || []).map(
         (c) => `• **${c.code}** — ${c.playlist} (${c.region}) _by ${c.createdBy}_`
       );
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Custom match codes", lines.length ? lines.join("\n") : "_No custom codes yet._")],
       });
     }
@@ -275,7 +302,7 @@ client.on("interactionCreate", async (interaction) => {
       if (data.vbucks != null) msg = `**${user}** now has **${data.vbucks.toLocaleString()}** V-Bucks.`;
 
       await logAction(client, `🎁 **${interaction.user.tag}** used /add ${pack} on **${user}**`);
-      return interaction.reply({ embeds: [embed("Add complete", msg, 0x37d67a)] });
+      return respond(interaction, { embeds: [embed("Add complete", msg, 0x37d67a)] });
     }
 
     if (cmd === "ban") {
@@ -288,7 +315,7 @@ client.on("interactionCreate", async (interaction) => {
       });
       if (!data.ok) return fail(interaction, data.reason || "Ban failed.", false);
       await logAction(client, `🔨 **${interaction.user.tag}** banned **${user}** — ${reason}`);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Player banned", `**${user}** has been banned.\n**Reason:** ${reason}`, 0xff5c7c)],
       });
     }
@@ -298,7 +325,7 @@ client.on("interactionCreate", async (interaction) => {
       const { data } = await api("/unban", "POST", { username: user });
       if (!data.ok) return fail(interaction, data.reason || "Unban failed.", false);
       await logAction(client, `✅ **${interaction.user.tag}** unbanned **${user}**`);
-      return interaction.reply({ embeds: [embed("Player unbanned", `**${user}** can play again.`, 0x37d67a)] });
+      return respond(interaction, { embeds: [embed("Player unbanned", `**${user}** can play again.`, 0x37d67a)] });
     }
 
     if (cmd === "remove") {
@@ -306,7 +333,7 @@ client.on("interactionCreate", async (interaction) => {
       const item = interaction.options.getString("item", true);
       const { data } = await api("/remove", "POST", { username: user, item });
       if (!data.ok) return fail(interaction, data.reason || "Remove failed.", false);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Item removed", `Removed \`${item}\` from **${user}** (${data.removed} item(s)).`, 0xfaa61a)],
       });
     }
@@ -316,7 +343,7 @@ client.on("interactionCreate", async (interaction) => {
       const { data } = await api("/delete", "POST", { username: user });
       if (!data.ok) return fail(interaction, data.reason || "Delete failed.", false);
       await logAction(client, `🗑️ **${interaction.user.tag}** deleted account **${user}**`);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Account deleted", `**${user}**'s account was deleted.`, 0xff5c7c)],
       });
     }
@@ -325,7 +352,7 @@ client.on("interactionCreate", async (interaction) => {
       const username = interaction.options.getString("username");
       const { data } = await api("/create-test-acc", "POST", { username });
       if (!data.ok) return fail(interaction, data.reason || "Failed.", false);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Test account created",
@@ -340,7 +367,7 @@ client.on("interactionCreate", async (interaction) => {
       const username = interaction.options.getString("username");
       const { data } = await api("/create-host-account", "POST", { username });
       if (!data.ok) return fail(interaction, data.reason || "Failed.", false);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Host account created",
@@ -360,7 +387,7 @@ client.on("interactionCreate", async (interaction) => {
         createdBy: interaction.user.tag,
       });
       if (!data.ok) return fail(interaction, data.reason || "Failed.", false);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("SAC created", `Support A Creator code **${data.entry.code}** is active.`, 0x37d67a)],
       });
     }
@@ -369,7 +396,7 @@ client.on("interactionCreate", async (interaction) => {
       const code = interaction.options.getString("code", true);
       const { data } = await api("/sac/remove", "POST", { code });
       if (!data.ok) return fail(interaction, data.reason || "Failed.", false);
-      return interaction.reply({ embeds: [embed("SAC deleted", `Removed SAC **${code}**.`, 0xfaa61a)] });
+      return respond(interaction, { embeds: [embed("SAC deleted", `Removed SAC **${code}**.`, 0xfaa61a)] });
     }
 
     if (cmd === "create-custom-match-code") {
@@ -381,7 +408,7 @@ client.on("interactionCreate", async (interaction) => {
         createdBy: interaction.user.tag,
       });
       if (!data.ok) return fail(interaction, data.reason || "Failed.", false);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Match code created",
@@ -394,7 +421,7 @@ client.on("interactionCreate", async (interaction) => {
 
     if (cmd === "status") {
       const { data } = await api("/status");
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [
           embed(
             "Velocity Status",
@@ -416,7 +443,7 @@ client.on("interactionCreate", async (interaction) => {
     if (cmd === "players") {
       const { data } = await api("/players");
       const online = (data.online || []).map((p) => `• **${p.displayName}**`).join("\n") || "_Nobody online_";
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Players", `**Online (${data.online?.length || 0})**\n${online}`)],
       });
     }
@@ -426,7 +453,7 @@ client.on("interactionCreate", async (interaction) => {
       const reason = interaction.options.getString("reason") || "Kicked via Discord";
       const { data } = await api("/kick", "POST", { username: user, reason });
       if (!data.ok) return fail(interaction, data.reason || "Kick failed.", false);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Player kicked", `**${user}** disconnected.`, 0xfaa61a)],
       });
     }
@@ -434,7 +461,7 @@ client.on("interactionCreate", async (interaction) => {
     if (cmd === "bans") {
       const { data } = await api("/bans");
       const lines = (data.bans || []).map((b) => `• **${b.username || b.accountId.slice(0, 8)}** — ${b.reason}`);
-      return interaction.reply({
+      return respond(interaction, {
         embeds: [embed("Banned players", lines.length ? lines.join("\n") : "_No bans_", lines.length ? 0xff5c7c : 0x5865f2)],
       });
     }
@@ -443,8 +470,10 @@ client.on("interactionCreate", async (interaction) => {
       const text = interaction.options.getString("text", true);
       const { data } = await api("/motd", "POST", { enabled: true, text });
       if (!data.ok) return fail(interaction, "MOTD update failed.", false);
-      return interaction.reply({ embeds: [embed("MOTD updated", text.slice(0, 4000))] });
+      return respond(interaction, { embeds: [embed("MOTD updated", text.slice(0, 4000))] });
     }
+
+    return fail(interaction, "Unknown command.");
   } catch (err) {
     console.error(err);
     return fail(interaction, `Error: ${err.message}`);

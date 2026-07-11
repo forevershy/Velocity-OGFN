@@ -8,6 +8,7 @@ const { pathToFileURL } = require("url");
 const { spawn, exec } = require("child_process");
 
 const discordPresence = require("./discord-presence");
+const discordBotHost = require("./discord-bot-host");
 const netSetup = require("./net-setup");
 const { launchFortnite } = require("./launch-game");
 const { installCustomPaks } = require("./custom-paks");
@@ -58,6 +59,7 @@ function loadConfig() {
       mods: {},
       discordPresence: true,
       discordClientId: "",
+      discordBot: true,
     };
   }
 }
@@ -221,16 +223,21 @@ app.whenReady().then(async () => {
   }
   if (shouldRunLocalBackend()) {
     await ensureBackendRunning();
+    if (loadConfig().discordBot !== false) {
+      discordBotHost.startDiscordBot({ resourcesPath: process.resourcesPath });
+    }
   }
   createWindow();
   startPresenceLoop();
   startGameWatch();
 });
 app.on("window-all-closed", () => {
+  discordBotHost.stopDiscordBot();
   if (backendProcess) backendProcess.kill();
   if (process.platform !== "darwin") app.quit();
 });
 app.on("before-quit", async () => {
+  discordBotHost.stopDiscordBot();
   if (presenceTimer) clearInterval(presenceTimer);
   if (gameWatchTimer) clearInterval(gameWatchTimer);
   await discordPresence.destroy();

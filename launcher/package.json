@@ -11,8 +11,8 @@
     "patch-icon": "node scripts/make-ico.js && node scripts/patch-exe-icon.js",
     "patch-asar": "node scripts/patch-asar.js",
     "patch-backend": "node scripts/patch-backend.js",
-    "dist": "npm run make-ico && npm run prepare-backend && electron-builder --win && node scripts/patch-exe-icon.js",
-    "dist:portable": "npm run make-ico && npm run prepare-backend && electron-builder --win portable && node scripts/patch-exe-icon.js"
+    "dist": "npm run make-ico && npm run prepare-backend && node scripts/prepare-discord-bot.js && electron-builder --win && node scripts/patch-exe-icon.js",
+    "dist:portable": "npm run make-ico && npm run prepare-backend && node scripts/prepare-discord-bot.js && electron-builder --win portable && node scripts/patch-exe-icon.js"
   },
   "license": "MIT",
   "dependencies": {
@@ -47,6 +47,7 @@
       "process-utils.js",
       "eac-eos-shim.js",
       "custom-paks.js",
+      "discord-bot-host.js",
       "renderer/**/*",
       "renderer/season-icons/**/*",
       "build/icon.png"
@@ -55,6 +56,13 @@
       {
         "from": "backend-bundle",
         "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "discord-bot-bundle",
+        "to": "discord-bot",
         "filter": [
           "**/*"
         ]

@@ -22,10 +22,21 @@ Push-Location launcher
 npm install
 Pop-Location
 
+Write-Host "Installing Discord bot dependencies..."
+Push-Location discord-bot
+npm install
+if (-not (Test-Path "config.json")) {
+  Copy-Item "config.example.json" "config.json"
+  Write-Host "Created discord-bot\config.json — add your bot token before using commands."
+}
+Pop-Location
+
 Write-Host ""
 Write-Host "Done!" -ForegroundColor Green
 Write-Host "  Backend only:  npm start"
 Write-Host "  Launcher UI:   cd launcher && npm start"
+Write-Host "  Discord bot:   npm run bot   (or auto-starts with Velocity when configured)"
+Write-Host "  Register cmds: cd discord-bot && npm run register"
 Write-Host "  Build installer for friends: cd launcher && npm run dist"
 Write-Host ""
 Write-Host "Or download the pre-built installer from GitHub Releases (recommended for friends)."

@@ -20,7 +20,7 @@ const asarTargets = [
   path.join(process.env.USERPROFILE || "", "VelocityTestInstall", "resources", "app.asar"),
 ];
 
-const rootFiles = ["main.js", "preload.js", "discord-presence.js", "net-setup.js", "launch-game.js", "launch-profiles.js", "auth-launch.js", "libcurl-ssl.js", "gameserver-host.js", "dll-inject.js", "spawn-with-parent.js", "process-utils.js", "eac-eos-shim.js", "custom-paks.js"];
+const rootFiles = ["main.js", "preload.js", "discord-presence.js", "discord-bot-host.js", "net-setup.js", "launch-game.js", "launch-profiles.js", "auth-launch.js", "libcurl-ssl.js", "gameserver-host.js", "dll-inject.js", "spawn-with-parent.js", "process-utils.js", "eac-eos-shim.js", "custom-paks.js"];
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
