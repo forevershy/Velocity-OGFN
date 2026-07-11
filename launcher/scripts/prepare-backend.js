@@ -12,12 +12,13 @@ function rimraf(dir) {
   if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
 }
 
-function copyDir(src, dest) {
+function copyDir(src, dest, skip = new Set()) {
   fs.mkdirSync(dest, { recursive: true });
   for (const name of fs.readdirSync(src)) {
+    if (skip.has(name)) continue;
     const s = path.join(src, name);
     const d = path.join(dest, name);
-    if (fs.statSync(s).isDirectory()) copyDir(s, d);
+    if (fs.statSync(s).isDirectory()) copyDir(s, d, skip);
     else fs.copyFileSync(s, d);
   }
 }
@@ -46,7 +47,7 @@ for (const item of items) {
     console.warn("skip missing:", item);
     continue;
   }
-  if (fs.statSync(src).isDirectory()) copyDir(src, dest);
+  if (fs.statSync(src).isDirectory()) copyDir(src, dest, new Set(["shop-cache.json"]));
   else fs.copyFileSync(src, dest);
 }
 

@@ -13,8 +13,8 @@ const LEGACY_POOL_PATH = path.join(__dirname, "..", "data", "shop-c1-legacy.json
 const CACHE_PATH =
   process.env.VELOCITY_SHOP_CACHE || path.join(__dirname, "..", "data", "shop-cache.json");
 
-/** Shop rotates every N hours (UTC). */
-const ROTATION_HOURS = 6;
+/** Shop rotates every 24 hours at UTC midnight. */
+const ROTATION_HOURS = 24;
 
 /** @type {Array<{name:string,type:string,templateId:string,rarity:string,chapter:number,season:number}>} */
 let cosmeticPool = [];
@@ -24,11 +24,8 @@ let rotationNonce = 0;
 
 function rotationWindow() {
   const d = new Date();
-  const block = Math.floor(d.getUTCHours() / ROTATION_HOURS);
-  const key = `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}-b${block}-n${rotationNonce}`;
-  const expires = new Date(
-    Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), (block + 1) * ROTATION_HOURS, 0, 0, 0)
-  );
+  const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}-n${rotationNonce}`;
+  const expires = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 1, 0, 0, 0, 0));
   return { key, expires: expires.toISOString() };
 }
 
@@ -259,7 +256,7 @@ function displayAssetPathFor(templateId, item = {}) {
 }
 
 function buildCatalogEntry(item, section, tileSize, options = {}) {
-  const { legacy = false, layout = "season" } = options;
+  const { legacy = false, layout = "season", saleExpiration = "2099-12-31T23:59:59.999Z" } = options;
   const price = priceForItem(item);
   const offerId = legacy
     ? item.offerId || offerIdFor(item.templateId)
@@ -285,7 +282,7 @@ function buildCatalogEntry(item, section, tileSize, options = {}) {
         currencySubType: "",
         regularPrice: price,
         finalPrice: price,
-        saleExpiration: "2099-12-31T23:59:59.999Z",
+        saleExpiration,
         basePrice: price,
       },
     ],
@@ -299,7 +296,7 @@ function buildCatalogEntry(item, section, tileSize, options = {}) {
             TileSize: tileSize,
             templateId: item.templateId,
             inDate: "2018-04-30T00:00:00.000Z",
-            outDate: "2099-12-31T23:59:59.999Z",
+            outDate: saleExpiration,
           },
     metaInfo: useTabMeta
       ? [
@@ -406,25 +403,27 @@ function buildCatalogFromPool(rotationKey, expiration, season = 0) {
 
     const seasonItems = pickRandomExcluding(source, 6, `${rotationKey}:season:${season}`, [...weeklyItems, ...dailyFinal]);
 
+    const entryOpts = { legacy: true, layout: "weekly", saleExpiration: expiration };
+
     return {
       ...shell,
       storefronts: [
         {
           name: "BRWeeklyStorefront",
           catalogEntries: weeklyItems.map((item) =>
-            buildCatalogEntry(item, "Featured", "Normal", { legacy: true, layout: "weekly" })
+            buildCatalogEntry(item, "Featured", "Normal", entryOpts)
           ),
         },
         {
           name: "BRDailyStorefront",
           catalogEntries: dailyFinal.map((item) =>
-            buildCatalogEntry(item, "Daily", "Small", { legacy: true, layout: "daily" })
+            buildCatalogEntry(item, "Daily", "Small", { ...entryOpts, layout: "daily" })
           ),
         },
         {
           name: "BRSeasonStorefront",
           catalogEntries: seasonItems.map((item, i) =>
-            buildCatalogEntry(item, `Panel ${i + 1}`, "Normal", { legacy: true, layout: "season" })
+            buildCatalogEntry(item, `Panel ${i + 1}`, "Normal", { ...entryOpts, layout: "season" })
           ),
         },
       ],
@@ -442,16 +441,18 @@ function buildCatalogFromPool(rotationKey, expiration, season = 0) {
     featured
   );
 
+  const modernOpts = { saleExpiration: expiration };
+
   return {
     ...shell,
     storefronts: [
       {
         name: "BRWeeklyStorefront",
-        catalogEntries: featured.map((item) => buildCatalogEntry(item, "Featured", "Normal")),
+        catalogEntries: featured.map((item) => buildCatalogEntry(item, "Featured", "Normal", modernOpts)),
       },
       {
         name: "BRDailyStorefront",
-        catalogEntries: daily.map((item) => buildCatalogEntry(item, "Daily", "Small")),
+        catalogEntries: daily.map((item) => buildCatalogEntry(item, "Daily", "Small", modernOpts)),
       },
     ],
   };
