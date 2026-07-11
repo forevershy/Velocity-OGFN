@@ -5,6 +5,7 @@ module.exports = [
   // Akamai CDN shards (Season 4+ and many later builds)
   "account-public-service-prod.ak.epicgames.com",
   "fortnite-public-service-prod.ak.epicgames.com",
+  "friends-public-service-prod.ak.epicgames.com",
   "datarouter-prod.ak.epicgames.com",
   "lightswitch-public-service-prod.ak.epicgames.com",
   "tracking-api-prod.ak.epicgames.com",

@@ -104,6 +104,7 @@ function issueTokens(rawDisplayName, res) {
   if (ban) return bannedResponse(res, ban);
 
   const displayName = ensureSessionDisplayName(accountId, username);
+  require("../structs/friendGraph").registerAccount(accountId);
   ensureAccountProfiles(accountId);
   applyOwnerPerks(accountId);
 

@@ -2,7 +2,8 @@ const { displayNameFor } = require("../utils/accounts");
 const { nowIso } = require("../utils/functions");
 
 const PARTY_NOTIFY = "com.epicgames.social.party.notification.v0";
-const FRIEND_NOTIFY = "com.epicgames.social.friends.notification.v1";
+const FRIEND_OBJECT = "com.epicgames.friends.core.apiobjects.Friend";
+const FRIEND_REMOVAL = "com.epicgames.friends.core.apiobjects.FriendRemoval";
 
 function sendJsonToAccount(accountId, body) {
   const { sendXmppMessageToId } = require("../xmpp/xmpp");
@@ -17,12 +18,76 @@ function notifyParty(accountId, subType, payload) {
   });
 }
 
-function notifyFriend(accountId, subType, payload) {
-  return sendJsonToAccount(accountId, {
-    type: `${FRIEND_NOTIFY}.${subType}`,
+function pushFriendObject(toAccountId, payload) {
+  return sendJsonToAccount(toAccountId, {
+    type: FRIEND_OBJECT,
     payload,
     timestamp: nowIso(),
   });
+}
+
+function pushFriendRemoval(toAccountId, otherAccountId) {
+  return sendJsonToAccount(toAccountId, {
+    type: FRIEND_REMOVAL,
+    payload: { accountId: otherAccountId, reason: "DELETED" },
+    timestamp: nowIso(),
+  });
+}
+
+function pushFriendPending(fromId, toId) {
+  const created = nowIso();
+  pushFriendObject(fromId, {
+    accountId: toId,
+    status: "PENDING",
+    direction: "OUTBOUND",
+    created,
+    favorite: false,
+  });
+  pushFriendObject(toId, {
+    accountId: fromId,
+    status: "PENDING",
+    direction: "INBOUND",
+    created,
+    favorite: false,
+  });
+}
+
+function pushFriendAccepted(a, b) {
+  const created = nowIso();
+  pushFriendObject(a, {
+    accountId: b,
+    status: "ACCEPTED",
+    direction: "OUTBOUND",
+    created,
+    favorite: false,
+  });
+  pushFriendObject(b, {
+    accountId: a,
+    status: "ACCEPTED",
+    direction: "OUTBOUND",
+    created,
+    favorite: false,
+  });
+  exchangePresence(a, b);
+}
+
+function exchangePresence(a, b) {
+  const { findByAccountId, sendRaw } = require("../xmpp/xmpp");
+  const aClient = findByAccountId(a);
+  const bClient = findByAccountId(b);
+  if (!aClient?.presence || !bClient?.jid) return;
+
+  sendRaw(
+    bClient,
+    aClient.presence.replace("<presence", `<presence from="${aClient.jid}" to="${bClient.jid}"`)
+  );
+
+  if (bClient.presence && aClient.jid) {
+    sendRaw(
+      aClient,
+      bClient.presence.replace("<presence", `<presence from="${bClient.jid}" to="${aClient.jid}"`)
+    );
+  }
 }
 
 function partyInvitePayload(party, invite) {
@@ -84,22 +149,9 @@ function pushPartyUpdated(party) {
   }
 }
 
-function pushFriendRequest(fromId, toId) {
-  notifyFriend(toId, "FRIENDSHIP_REQUEST", {
-    fromId,
-    fromDisplayName: displayNameFor(fromId),
-    created: nowIso(),
-  });
-}
-
-function pushFriendAccepted(fromId, toId) {
-  for (const id of [fromId, toId]) {
-    notifyFriend(id, "FRIENDSHIP_ACCEPTED", {
-      accountId: id === fromId ? toId : fromId,
-      displayName: displayNameFor(id === fromId ? toId : fromId),
-      created: nowIso(),
-    });
-  }
+function pushFriendRemoved(a, b) {
+  pushFriendRemoval(a, b);
+  pushFriendRemoval(b, a);
 }
 
 function buildJoinablePresence(party, displayName) {
@@ -154,13 +206,13 @@ function pushPresenceToFriends(accountId, party) {
 
 module.exports = {
   notifyParty,
-  notifyFriend,
   pushPartyInvite,
   pushPartyMemberJoined,
   pushPartyMemberLeft,
   pushPartyUpdated,
-  pushFriendRequest,
+  pushFriendPending,
   pushFriendAccepted,
+  pushFriendRemoved,
   pushPresenceToFriends,
   buildJoinablePresence,
 };

@@ -55,6 +55,15 @@ function listOutgoing(accountId) {
   return uniq(ensureAccount(accountId)?.outgoing || []);
 }
 
+function listBlocked(accountId) {
+  return uniq(ensureAccount(accountId)?.blocked || []);
+}
+
+function registerAccount(accountId) {
+  ensureAccount(accountId);
+  save();
+}
+
 function addFriendship(a, b) {
   const rowA = ensureAccount(a);
   const rowB = ensureAccount(b);
@@ -146,6 +155,8 @@ module.exports = {
   listFriends,
   listIncoming,
   listOutgoing,
+  listBlocked,
+  registerAccount,
   sendRequest,
   acceptRequest,
   removeFriend,
